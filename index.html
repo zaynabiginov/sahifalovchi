@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sahifalovchi</title>
+    <meta name="theme-color" content="#059669">
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="icon" href="./icon.svg" type="image/svg+xml">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { transition: background-color .2s, color .2s; }
+        .calculate-button { transition: background-color .2s, box-shadow .2s, transform .2s; }
+        .calculate-button:hover {
+            background-color: #047857;
+            box-shadow: 0 8px 18px rgba(5, 150, 105, .3);
+            transform: translateY(-2px);
+        }
+        .calculate-button:active { transform: translateY(0); }
+        .calculate-button:focus-visible { outline: 3px solid #6ee7b7; outline-offset: 3px; }
+        .copy-button { transition: background-color .2s, border-color .2s, color .2s; }
+        .copy-button:hover {
+            border-color: #047857 !important;
+            background-color: #047857 !important;
+            color: #fff !important;
+        }
+        #sheetPreview { max-height: 28rem; overflow: auto; }
+        .sheet-card { min-width: 10rem; border: 1px solid #cbd5e1; border-radius: .75rem; background: white; padding: .75rem; }
+        .sheet-side { display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; border: 1px solid #cbd5e1; border-radius: .4rem; }
+        .sheet-page { padding: .65rem .25rem; text-align: center; font-weight: 700; }
+        .sheet-page + .sheet-page { border-left: 1px dashed #94a3b8; }
+        body[data-theme="dark"] { background-color: #0f172a !important; color: #e2e8f0; }
+        body[data-theme="dark"] > .max-w-3xl { background-color: #1e293b !important; }
+        body[data-theme="dark"] .bg-slate-100,
+        body[data-theme="dark"] .bg-slate-50 { background-color: #273449 !important; }
+        body[data-theme="dark"] .text-slate-800,
+        body[data-theme="dark"] .text-slate-700,
+        body[data-theme="dark"] .text-slate-600,
+        body[data-theme="dark"] .text-slate-900,
+        body[data-theme="dark"] .text-blue-900,
+        body[data-theme="dark"] .text-slate-500 { color: #cbd5e1 !important; }
+        body[data-theme="dark"] .border,
+        body[data-theme="dark"] .border-b,
+        body[data-theme="dark"] .border-t { border-color: #475569 !important; }
+        body[data-theme="dark"] textarea,
+        body[data-theme="dark"] input,
+        body[data-theme="dark"] select { background-color: #0f172a; color: #e2e8f0; border-color: #475569; }
+        body[data-theme="dark"] .sheet-card { background: #273449; border-color: #475569; }
+        body[data-theme="dark"] .sheet-side { border-color: #64748b; }
+        body[data-theme="dark"] .sheet-page + .sheet-page { border-color: #64748b; }
+        body[data-theme="dark"] .bg-amber-50 { background-color: #422006 !important; }
+        body[data-theme="dark"] .text-amber-900 { color: #fde68a !important; }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen p-4 sm:p-8">
+
+    <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-md p-6">
+        <!-- Шапка и выбор языка -->
+        <div class="flex flex-col sm:flex-row items-center justify-between border-b pb-4 mb-6 gap-4">
+            <h1 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                <span class="bg-emerald-600 text-white px-2 py-1 rounded text-sm">S</span> 
+                <span id="t-title">Sahifalovchi</span>
+            </h1>
+            
+            <!-- Переключатель языка -->
+            <div class="flex flex-wrap items-center justify-center gap-2">
+                <button type="button" id="installApp" class="rounded-lg border border-emerald-600 bg-emerald-600 px-3 py-2 text-xs font-medium text-white hover:bg-emerald-700">Ilovani o‘rnatish</button>
+                <select id="languageSelect" aria-label="Language" class="border rounded-lg px-2 py-2 text-xs">
+                    <option value="uz">O'Z</option>
+                    <option value="ru">RU</option>
+                    <option value="en">EN</option>
+                </select>
+                <select id="themeSelect" aria-label="Theme" class="border rounded-lg px-2 py-2 text-xs">
+                    <option value="system" id="t-theme-system">System</option>
+                    <option value="light" id="t-theme-light">Light</option>
+                    <option value="dark" id="t-theme-dark">Dark</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Управление -->
+        <form novalidate onsubmit="calculateBooklet(); return false;" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <div>
+                <label id="t-label-pages" class="block text-xs font-medium text-slate-700 mb-1">Barcha sahifalar soni:</label>
+                <input type="number" id="pageCount" placeholder="Sahifalar sonini kiriting" 
+                    class="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500">
+            </div>
+            <div class="flex items-end">
+                <button type="submit" id="t-btn-calc"
+                    class="calculate-button w-full bg-emerald-600 text-white font-medium py-2 px-4 rounded-lg text-sm">
+                    Hisoblash
+                </button>
+            </div>
+        </form>
+
+        <!-- Инфо о листах -->
+        <div class="bg-slate-50 p-4 rounded-lg mb-6 text-xs text-slate-600 space-y-1 border">
+            <div><span id="t-info-sheets">Kerak boʻladigan A4 varaqlar soni:</span> <strong id="totalSheets" class="text-slate-900">0</strong></div>
+            <div><span id="t-info-pages">Betlar soni:</span> <strong id="pagesResult" class="text-slate-900">0</strong></div>
+        </div>
+
+        <!-- 1-сторона -->
+        <div class="mb-4">
+            <div class="mb-1 flex items-center justify-between gap-3">
+                <label id="t-label-side1" for="side1" class="block text-sm font-bold text-blue-900">1-taraf (Oldingi tomoni):</label>
+                <button type="button" onclick="copyPages('side1')" id="t-copy-side1" class="copy-button rounded-md border px-3 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50">Nusxalash</button>
+            </div>
+            <textarea id="side1" rows="5" readonly 
+                placeholder="Hisoblash tugmasini bosing — sahifalar roʻyxati shu yerda koʻrinadi."
+                class="w-full border rounded-lg p-3 bg-slate-50 text-xs font-mono"></textarea>
+        </div>
+
+        <!-- 2-сторона -->
+        <div class="mb-6">
+            <div class="mb-1 flex items-center justify-between gap-3">
+                <label id="t-label-side2" for="side2" class="block text-sm font-bold text-blue-900">2-taraf (Orqa tomoni):</label>
+                <button type="button" onclick="copyPages('side2')" id="t-copy-side2" class="copy-button rounded-md border px-3 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50">Nusxalash</button>
+            </div>
+            <textarea id="side2" rows="5" readonly 
+                placeholder="Hisoblash tugmasini bosing — sahifalar roʻyxati shu yerda koʻrinadi."
+                class="w-full border rounded-lg p-3 bg-slate-50 text-xs font-mono"></textarea>
+        </div>
+
+        <section class="mb-6 rounded-lg border p-4">
+            <div class="mb-3 flex flex-wrap items-center justify-between gap-3">
+                <h2 id="t-preview-title" class="text-sm font-bold text-slate-800">Предпросмотр порядка листов</h2>
+                <label class="flex items-center gap-2 text-xs text-slate-700">
+                    <input type="checkbox" id="invertFeed" class="h-4 w-4">
+                    <span id="t-invert-label">Varaqlar tartibini teskari o‘zgartirish</span>
+                </label>
+            </div>
+            <p id="t-feed-description" class="mb-3 text-xs text-slate-600"></p>
+            <div id="sheetPreview" class="flex flex-wrap gap-3" aria-live="polite"></div>
+            <p id="t-preview-empty" class="text-xs text-slate-500">Введите число страниц и нажмите «Рассчитать», чтобы увидеть листы.</p>
+            <p id="t-preview-limit" class="mt-2 hidden text-xs text-slate-500"></p>
+        </section>
+
+        <!-- Кнопки сохранения -->
+        <div class="flex justify-end gap-3">
+            <button onclick="saveResult()" id="t-btn-save"
+                class="bg-slate-800 hover:bg-slate-900 text-white font-medium py-2 px-5 rounded-lg text-sm transition">
+                TXT formatida saqlash
+            </button>
+        </div>
+
+        <section class="mt-8 border-t pt-6 text-sm text-slate-700">
+            <h2 id="t-instructions-title" class="mb-3 text-lg font-bold text-slate-800">Varaqlarni toʻgʻri joylashtirish</h2>
+            <ol id="t-instructions" class="list-decimal space-y-2 pl-5"></ol>
+            <p id="t-instructions-note" class="mt-4 rounded-lg bg-amber-50 p-3 text-xs text-amber-900"></p>
+        </section>
+    </div>
+
+    <script>
+        // Словарь переводов
+        const langData = {
+            uz: {
+                title: "Sahifalovchi",
+                labelPages: "Barcha sahifalar soni:",
+                pageCountPlaceholder: "Sahifalar sonini kiriting",
+                btnCalc: "Hisoblash",
+                alertPageMultiple: "Kitob sahifalari soni 4 ga karrali bo‘lishi kerak. Qiymat hisoblash uchun {pages} gacha oshirib yaxlitlanadi.",
+                infoSheets: "Kerak boʻladigan A4 varaqlar soni:",
+                infoPages: "Betlar soni:",
+                labelSide1: "1-tomon (Old tomoni):",
+                labelSide2: "2-tomon (Orqa tomoni):",
+                resultPlaceholder: "Hisoblash tugmasini bosing — sahifalar roʻyxati shu yerda koʻrinadi.",
+                copyButton: "Nusxalash",
+                copySuccess: "Sahifalar roʻyxati nusxalandi.",
+                copyEmpty: "Avval sahifalarni hisoblang.",
+                copyError: "Nusxalab boʻlmadi. Brauzerga almashish buferidan foydalanishga ruxsat bering va qayta urinib koʻring.",
+                previewTitle: "Betlarning varaqlardagi tartibi",
+                invertLabel: "Varaqlar tartibini teskari o‘zgartirish",
+                feedNormal: "Oddiy tartib: avval tashqi varaq, so‘ng ichki varaqlar.",
+                feedInverted: "Teskari tartib: avval ichki varaqlar, so‘ng tashqi varaq.",
+                previewEmpty: "Betlarni ko‘rish uchun sahifalar sonini kiriting va «Hisoblash»ni bosing.",
+                previewSheet: "Varaq",
+                previewFeed: "Tartib",
+                previewFront: "Old tomoni",
+                previewBack: "Orqa tomoni",
+                previewLimit: "Tez ishlashi uchun {shown} ta varaq ko‘rsatilmoqda (jami {total} ta). Chop etish ro‘yxatida barcha varaqlar bor.",
+                languageLabel: "Til",
+                themeLabel: "Mavzu",
+                themeSystem: "Tizim bo‘yicha",
+                themeLight: "Yorug‘",
+                themeDark: "Qorong‘i",
+                instructionsTitle: "Varaqlarni qanday toʻgʻri joylashtirish kerak?",
+                instructions: [
+                    "Betlar sonini kiriting va «Hisoblash» tugmasini bosing. Bitta A4 varaqda kitobning 4 ta beti joylashadi.",
+                    "Raqamlarni juftlab o‘qing: har bir juftlik A4 varaqning bir tomonida chap va o‘ngda joylashadigan betlarni ko‘rsatadi. Masalan, «368, 1» degani — chapda 368-bet, o‘ngda 1-bet.",
+                    "Birinchi ro‘yxat varaqning old tomoni, ikkinchisi esa orqa tomoni uchun. Ro‘yxatdagi bir xil o‘rinda turgan juftliklar bitta varaqga tegishli. Birinchi juftlik tashqi varaqqa, keyingilari uning ichiga joylanadigan varaqlarga tegishli.",
+                    "Betlarni A4 qog‘ozga albom yo‘nalishida joylashtiring: juftlikdagi birinchi raqam chapda, ikkinchisi o‘ngda bo‘lsin. Qog‘ozning ikkala tomoniga chop eting. Printer qog‘ozni qaysi tomonga aylantirishini tekshirish uchun avval bitta sinov varag‘ini chop qiling.",
+                    "Har bir A4 varaqni teng ikkiga buklang. Buklangan varaqlarni birinchi varaq tashqarida qoladigan qilib, ro‘yxat tartibida bir-birining ichiga joylang.",
+                    "Betlar tartibini tekshiring: muqovaning ichki tomonida 2-bet, orqa muqovaning ichki tomonida esa oxirgi bet bo‘lishi kerak. So‘ng buklangan joyidan tikib yoki boshqa usulda mahkamlang."
+                ],
+                instructionsNote: "Eslatma: ikki tomonlama chop etishda qog‘ozni aylantirish yo‘nalishi printer va dasturga bog‘liq. Sinov varag‘ida betlarning joylashuvini tekshiring. Qalin kitobni bir nechta kichik blok qilib tayyorlash talab etilishi mumkin.",
+                btnSave: "TXT formatida saqlash",
+                alertMin: "Eng kamida 4 ta sahifa boʻlishi kerak!",
+                installApp: "Ilovani o‘rnatish",
+                installUnavailable: "Ilovani o‘rnatish uchun sahifani HTTPS orqali oching, so‘ng brauzer menyusidan «Ilovani o‘rnatish» yoki «Bosh ekranga qo‘shish»ni tanlang.",
+                fileHeader1: "=== 1-TARAF (Oldingi tomoni) ===",
+                fileHeader2: "=== 2-TARAF (Orqa tomoni) ==="
+            },
+            ru: {
+                title: "Брошюратор",
+                labelPages: "Всего страниц:",
+                pageCountPlaceholder: "Введите количество страниц",
+                btnCalc: "Рассчитать",
+                alertPageMultiple: "Количество страниц должно быть кратно 4. Значение будет округлено вверх до {pages}.",
+                infoSheets: "Всего листов формата А4:",
+                infoPages: "Количество страниц:",
+                labelSide1: "Сторона 1 (лицевая):",
+                labelSide2: "Сторона 2 (оборотная):",
+                resultPlaceholder: "Нажмите «Рассчитать», чтобы увидеть список страниц.",
+                copyButton: "Копировать",
+                copySuccess: "Список страниц скопирован.",
+                copyEmpty: "Сначала рассчитайте страницы.",
+                copyError: "Не удалось скопировать. Разрешите браузеру доступ к буферу обмена и попробуйте ещё раз.",
+                previewTitle: "Визуальный порядок страниц",
+                invertLabel: "Обратить порядок листов",
+                feedNormal: "Обычный порядок: сначала внешний лист, затем внутренние.",
+                feedInverted: "Обратный порядок: сначала внутренние листы, затем внешний.",
+                previewEmpty: "Введите число страниц и нажмите «Рассчитать», чтобы увидеть листы.",
+                previewSheet: "Лист",
+                previewFeed: "Порядок",
+                previewFront: "Лицевая сторона",
+                previewBack: "Оборотная сторона",
+                previewLimit: "Чтобы страница работала быстрее, показаны первые {shown} листов из {total}. В списках для печати есть все листы.",
+                languageLabel: "Язык",
+                themeLabel: "Тема",
+                themeSystem: "Как в системе",
+                themeLight: "Светлая",
+                themeDark: "Тёмная",
+                instructionsTitle: "Как правильно сложить листы?",
+                instructions: [
+                    "Введите количество страниц и нажмите «Рассчитать». На одном листе A4 размещаются четыре страницы книги.",
+                    "Читайте числа парами: каждая пара показывает страницы, которые будут расположены слева и справа на одной стороне листа A4. Например, «368, 1» означает: слева — страница 368, справа — страница 1.",
+                    "Первый список предназначен для лицевой стороны листов, второй — для оборотной. Пары на одинаковых позициях относятся к одному листу. Первая пара — внешний лист, следующие — листы, вкладываемые внутрь.",
+                    "Разместите страницы на листе A4 в альбомной ориентации: первое число пары слева, второе справа. Печатайте с обеих сторон. Сначала сделайте пробную печать одного листа, чтобы проверить, как принтер переворачивает бумагу.",
+                    "Сложите каждый лист пополам. Вкладывайте сложенные листы друг в друга по порядку: первый лист должен быть снаружи.",
+                    "Проверьте последовательность страниц: на внутренней стороне передней обложки должна быть страница 2, а на внутренней стороне задней обложки — последняя страница. Затем скрепите блок по сгибу."
+                ],
+                instructionsNote: "Важно: направление переворота листа при двусторонней печати зависит от принтера и программы. Проверьте ориентацию страниц на пробном листе. Для толстой книги может понадобиться разделить листы на несколько небольших блоков.",
+                btnSave: "Сохранить в TXT",
+                alertMin: "Минимальное количество страниц — 4",
+                installApp: "Установить приложение",
+                installUnavailable: "Чтобы установить приложение, откройте страницу по HTTPS и выберите в меню браузера «Установить приложение» или «Добавить на главный экран».",
+                fileHeader1: "=== 1-СТОРОНА (Лицевая сторона) ===",
+                fileHeader2: "=== 2-СТОРОНА (Оборотная сторона) ==="
+            },
+            en: {
+                title: "Booklet Maker",
+                labelPages: "Total pages:",
+                pageCountPlaceholder: "Enter the number of pages",
+                btnCalc: "Calculate",
+                alertPageMultiple: "The page count must be a multiple of 4. It will be rounded up to {pages} for the calculation.",
+                infoSheets: "Total A4 sheets:",
+                infoPages: "Page count:",
+                labelSide1: "Side 1 (Front):",
+                labelSide2: "Side 2 (Back):",
+                resultPlaceholder: "Press “Calculate” to see the page order.",
+                copyButton: "Copy",
+                copySuccess: "Page order copied.",
+                copyEmpty: "Calculate the page order first.",
+                copyError: "Could not copy. Allow clipboard access in your browser and try again.",
+                previewTitle: "Visual page order",
+                invertLabel: "Reverse sheet order",
+                feedNormal: "Normal order: outer sheet first, followed by the inner sheets.",
+                feedInverted: "Reversed order: inner sheets first, followed by the outer sheet.",
+                previewEmpty: "Enter the page count and press “Calculate” to preview the sheets.",
+                previewSheet: "Sheet",
+                previewFeed: "Order",
+                previewFront: "Front side",
+                previewBack: "Back side",
+                previewLimit: "To keep the page responsive, showing the first {shown} of {total} sheets. The print lists still include every sheet.",
+                languageLabel: "Language",
+                themeLabel: "Theme",
+                themeSystem: "System",
+                themeLight: "Light",
+                themeDark: "Dark",
+                instructionsTitle: "How should the sheets be folded and assembled?",
+                instructions: [
+                    "Enter the page count and press “Calculate”. Each A4 sheet contains four book pages.",
+                    "Read the numbers in pairs: each pair shows the left and right pages on one side of an A4 sheet. For example, “368, 1” means page 368 on the left and page 1 on the right.",
+                    "The first list is for the front of each sheet; the second is for the back. Pairs in the same position belong to the same physical sheet. The first pair is the outer sheet; subsequent sheets fit inside it.",
+                    "Arrange the pages on A4 paper in landscape orientation, with the first number on the left and the second on the right. Print both sides. Test one sheet first to check the printer's paper-flip direction.",
+                    "Fold each A4 sheet in half. Insert the folded sheets inside one another in list order, keeping the first sheet on the outside.",
+                    "Check the page sequence: page 2 should be on the inside of the front cover, and the final page on the inside of the back cover. Then bind the booklet along the fold."
+                ],
+                instructionsNote: "Note: the paper-flip direction for duplex printing varies by printer and software. Check the page orientation with a test sheet. For a thick book, you may need to split the sheets into several smaller sections.",
+                btnSave: "Save as TXT",
+                alertMin: "Enter at least 4 pages.",
+                installApp: "Install app",
+                installUnavailable: "To install the app, open this page over HTTPS, then choose “Install app” or “Add to Home Screen” from your browser menu.",
+                fileHeader1: "=== SIDE 1 (Front) ===",
+                fileHeader2: "=== SIDE 2 (Back) ==="
+            }
+        };
+
+        let currentLang = 'uz';
+        let sheetPairs = [];
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            const t = langData[lang];
+            document.documentElement.lang = lang;
+            document.getElementById('languageSelect').value = lang;
+
+            document.getElementById('t-title').textContent = t.title;
+            document.getElementById('t-label-pages').textContent = t.labelPages;
+            document.getElementById('pageCount').placeholder = t.pageCountPlaceholder;
+            document.getElementById('t-btn-calc').textContent = t.btnCalc;
+            document.getElementById('installApp').textContent = t.installApp;
+            document.getElementById('t-info-sheets').textContent = t.infoSheets;
+            document.getElementById('t-info-pages').textContent = t.infoPages;
+            document.getElementById('t-label-side1').textContent = t.labelSide1;
+            document.getElementById('t-label-side2').textContent = t.labelSide2;
+            document.getElementById('side1').placeholder = t.resultPlaceholder;
+            document.getElementById('side2').placeholder = t.resultPlaceholder;
+            document.getElementById('t-copy-side1').textContent = t.copyButton;
+            document.getElementById('t-copy-side2').textContent = t.copyButton;
+            document.getElementById('t-btn-save').textContent = t.btnSave;
+            document.getElementById('t-preview-title').textContent = t.previewTitle;
+            document.getElementById('t-invert-label').textContent = t.invertLabel;
+            document.getElementById('t-preview-empty').textContent = t.previewEmpty;
+            document.getElementById('t-theme-system').textContent = t.themeSystem;
+            document.getElementById('t-theme-light').textContent = t.themeLight;
+            document.getElementById('t-theme-dark').textContent = t.themeDark;
+            document.getElementById('languageSelect').setAttribute('aria-label', t.languageLabel);
+            document.getElementById('themeSelect').setAttribute('aria-label', t.themeLabel);
+            document.getElementById('t-instructions-title').textContent = t.instructionsTitle;
+            const instructions = document.getElementById('t-instructions');
+            instructions.replaceChildren(...t.instructions.map(step => {
+                const item = document.createElement('li');
+                item.textContent = step;
+                return item;
+            }));
+            document.getElementById('t-instructions-note').textContent = t.instructionsNote;
+            renderSheetPreview();
+        }
+
+        function applyTheme() {
+            const theme = document.getElementById('themeSelect').value;
+            const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            document.body.dataset.theme = isDark ? 'dark' : 'light';
+        }
+
+        function renderSheetPreview() {
+            const t = langData[currentLang];
+            const isInverted = document.getElementById('invertFeed').checked;
+            const orderedPairs = isInverted ? [...sheetPairs].reverse() : sheetPairs;
+            const preview = document.getElementById('sheetPreview');
+            const emptyMessage = document.getElementById('t-preview-empty');
+            const limitMessage = document.getElementById('t-preview-limit');
+            const description = document.getElementById('t-feed-description');
+            const displayLimit = 200;
+
+            description.textContent = isInverted ? t.feedInverted : t.feedNormal;
+            preview.replaceChildren();
+            emptyMessage.classList.toggle('hidden', orderedPairs.length > 0);
+
+            orderedPairs.slice(0, displayLimit).forEach((sheet, index) => {
+                const card = document.createElement('article');
+                card.className = 'sheet-card text-xs text-slate-700';
+
+                const heading = document.createElement('h3');
+                heading.className = 'mb-2 font-semibold';
+                const physicalSheet = isInverted ? sheetPairs.length - index : index + 1;
+                heading.textContent = `${t.previewFeed} ${index + 1} · ${t.previewSheet} ${physicalSheet}`;
+
+                const frontLabel = document.createElement('p');
+                frontLabel.className = 'mb-1 text-slate-500';
+                frontLabel.textContent = t.previewFront;
+                const front = document.createElement('div');
+                front.className = 'sheet-side mb-2';
+                sheet.front.forEach(page => {
+                    const pageCell = document.createElement('span');
+                    pageCell.className = 'sheet-page';
+                    pageCell.textContent = page;
+                    front.append(pageCell);
+                });
+
+                const backLabel = document.createElement('p');
+                backLabel.className = 'mb-1 text-slate-500';
+                backLabel.textContent = t.previewBack;
+                const back = document.createElement('div');
+                back.className = 'sheet-side';
+                sheet.back.forEach(page => {
+                    const pageCell = document.createElement('span');
+                    pageCell.className = 'sheet-page';
+                    pageCell.textContent = page;
+                    back.append(pageCell);
+                });
+
+                card.append(heading, frontLabel, front, backLabel, back);
+                preview.append(card);
+            });
+
+            const omitted = orderedPairs.length - displayLimit;
+            limitMessage.classList.toggle('hidden', omitted <= 0);
+            if (omitted > 0) {
+                limitMessage.textContent = t.previewLimit
+                    .replace('{shown}', displayLimit)
+                    .replace('{total}', orderedPairs.length);
+            } else {
+                limitMessage.textContent = '';
+            }
+        }
+
+        function updateFeedOrder() {
+            const orderedPairs = document.getElementById('invertFeed').checked
+                ? [...sheetPairs].reverse()
+                : sheetPairs;
+            document.getElementById('side1').value = orderedPairs.map(sheet => sheet.front.join(', ')).join(', ');
+            document.getElementById('side2').value = orderedPairs.map(sheet => sheet.back.join(', ')).join(', ');
+            renderSheetPreview();
+        }
+
+        async function copyPages(fieldId) {
+            const t = langData[currentLang];
+            const text = document.getElementById(fieldId).value;
+
+            if (!text) {
+                alert(t.copyEmpty);
+                return;
+            }
+
+            try {
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(text);
+                } else {
+                    throw new Error('Clipboard API is unavailable in this context.');
+                }
+            } catch {
+                const temporaryField = document.createElement('textarea');
+                let copied = false;
+                try {
+                    temporaryField.value = text;
+                    temporaryField.setAttribute('readonly', '');
+                    temporaryField.style.position = 'fixed';
+                    temporaryField.style.opacity = '0';
+                    document.body.appendChild(temporaryField);
+                    temporaryField.select();
+                    copied = document.execCommand('copy');
+                } catch {
+                    copied = false;
+                } finally {
+                    temporaryField.remove();
+                }
+
+                if (!copied) {
+                    alert(t.copyError);
+                    return;
+                }
+            }
+
+            alert(t.copySuccess);
+        }
+
+        function calculateBooklet() {
+            let totalPages = parseInt(document.getElementById('pageCount').value) || 0;
+            const t = langData[currentLang];
+
+            if (totalPages < 4) {
+                alert(t.alertMin);
+                return;
+            }
+
+            if (totalPages % 4 !== 0) {
+                totalPages = Math.ceil(totalPages / 4) * 4;
+                alert(t.alertPageMultiple.replace("{pages}", totalPages));
+                document.getElementById('pageCount').value = totalPages;
+            }
+
+            let totalSheets = totalPages / 4;
+            document.getElementById('totalSheets').textContent = totalSheets;
+            document.getElementById('pagesResult').textContent = totalPages;
+
+            sheetPairs = [];
+
+            const endPage = totalPages;
+            const sheetsInBook = totalPages / 4;
+
+            for (let i = 0; i < sheetsInBook; i++) {
+                let p1 = endPage - (2 * i);
+                let p2 = 1 + (2 * i);
+                let p3 = 1 + (2 * i) + 1;
+                let p4 = endPage - (2 * i) - 1;
+
+                sheetPairs.push({ front: [p1, p2], back: [p3, p4] });
+            }
+
+            updateFeedOrder();
+        }
+
+        function saveResult() {
+            const t = langData[currentLang];
+            let text = `${t.fileHeader1}\n` + document.getElementById('side1').value + "\n\n" +
+                       `${t.fileHeader2}\n` + document.getElementById('side2').value;
+            let blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+            let link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = currentLang === 'ru' ? "broshurator_result.txt" : currentLang === 'en' ? "booklet_result.txt" : "sahifalovchi_result.txt";
+            link.click();
+        }
+
+        const systemThemePreference = window.matchMedia('(prefers-color-scheme: dark)');
+        let deferredInstallPrompt = null;
+        const installButton = document.getElementById('installApp');
+        installButton.addEventListener('click', async () => {
+            if (!deferredInstallPrompt) {
+                alert(langData[currentLang].installUnavailable);
+                return;
+            }
+
+            deferredInstallPrompt.prompt();
+            await deferredInstallPrompt.userChoice;
+            deferredInstallPrompt = null;
+        });
+        window.addEventListener('beforeinstallprompt', event => {
+            event.preventDefault();
+            deferredInstallPrompt = event;
+        });
+        window.addEventListener('appinstalled', () => {
+            deferredInstallPrompt = null;
+            installButton.disabled = true;
+        });
+        document.getElementById('languageSelect').addEventListener('change', event => setLanguage(event.target.value));
+        document.getElementById('themeSelect').addEventListener('change', applyTheme);
+        document.getElementById('invertFeed').addEventListener('change', updateFeedOrder);
+        if (systemThemePreference.addEventListener) {
+            systemThemePreference.addEventListener('change', () => {
+                if (document.getElementById('themeSelect').value === 'system') applyTheme();
+            });
+        } else {
+            systemThemePreference.addListener(() => {
+                if (document.getElementById('themeSelect').value === 'system') applyTheme();
+            });
+        }
+        window.onload = () => {
+            setLanguage('uz');
+            applyTheme();
+        };
+        if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+            navigator.serviceWorker.register('./sw.js').catch(error => {
+                console.error('Service worker registration failed:', error);
+            });
+        }
+    </script>
+</body>
+</html>
