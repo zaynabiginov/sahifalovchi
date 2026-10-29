@@ -180,6 +180,14 @@
                     <option value="light" id="t-theme-light">Light</option>
                     <option value="dark" id="t-theme-dark">Dark</option>
                 </select>
+                <button type="button" id="t-help-open" aria-haspopup="dialog" aria-controls="helpDialog"
+                    class="calculate-button inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-3 py-2 text-xs font-semibold text-white">
+                    <svg viewBox="0 0 20 20" class="h-4 w-4" fill="none" aria-hidden="true">
+                        <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.8"/>
+                        <path d="M7.8 7.5a2.25 2.25 0 1 1 3.8 1.63c-.95.9-1.6 1.2-1.6 2.37M10 14.5h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    </svg>
+                    <span id="t-help-button">Yordam</span>
+                </button>
             </div>
         </div>
 
@@ -298,23 +306,13 @@
                     <img src="./developer-photo.png" alt="Developer" class="h-12 w-12 rounded-full border-2 border-emerald-600 object-cover">
                     <div>
                         <p id="t-footer-title" class="text-xs font-semibold uppercase tracking-wide text-slate-500">Developer</p>
-                        <a id="t-footer-name" href="https://github.com/zaynabiginov/Sahifachi" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-emerald-700 hover:text-emerald-800 hover:underline">GitHub · zaynabiginov/Sahifachi</a>
+                        <a id="t-footer-name" href="https://github.com/zaynabiginov/Sahifalovchi" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-emerald-700 hover:text-emerald-800 hover:underline">GitHub · zaynabiginov/Sahifachi</a>
                     </div>
                 </div>
                 <p id="t-footer-caption" class="text-xs text-slate-500">Sahifalovchi · Booklet maker</p>
             </div>
         </footer>
 
-        <div class="mt-5 flex justify-center">
-            <button type="button" id="t-help-open" aria-haspopup="dialog" aria-controls="helpDialog"
-                class="calculate-button inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-5 py-2 text-sm font-semibold text-white">
-                <svg viewBox="0 0 20 20" class="h-4 w-4" fill="none" aria-hidden="true">
-                    <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.8"/>
-                    <path d="M7.8 7.5a2.25 2.25 0 1 1 3.8 1.63c-.95.9-1.6 1.2-1.6 2.37M10 14.5h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-                </svg>
-                <span id="t-help-button">Yordam</span>
-            </button>
-        </div>
     </div>
 
     <dialog id="helpDialog" class="help-dialog rounded-2xl bg-white text-slate-700 shadow-2xl">
