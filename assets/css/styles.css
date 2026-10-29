@@ -126,16 +126,46 @@
             padding: 0;
             opacity: 0;
             transform: translateY(16px) scale(.98);
-            transition: opacity .22s ease, transform .22s ease;
+            transition:
+                opacity .22s ease,
+                transform .22s ease,
+                display .22s allow-discrete,
+                overlay .22s allow-discrete;
         }
         .help-dialog[open] {
             opacity: 1;
             transform: translateY(0) scale(1);
         }
-        .help-dialog::backdrop { background: rgba(15, 23, 42, .65); backdrop-filter: blur(3px); }
+        .help-close-button {
+            transition: color .2s ease, background-color .2s ease;
+        }
+        .help-close-button:hover {
+            background-color: #d1fae5;
+            color: #047857;
+        }
+        @starting-style {
+            .help-dialog[open] {
+                opacity: 0;
+                transform: translateY(16px) scale(.98);
+            }
+        }
+        .help-dialog::backdrop {
+            background: rgba(15, 23, 42, .65);
+            backdrop-filter: blur(3px);
+            transition:
+                background-color .22s ease,
+                display .22s allow-discrete,
+                overlay .22s allow-discrete;
+        }
+        @starting-style {
+            .help-dialog[open]::backdrop {
+                background: transparent;
+            }
+        }
         body[data-theme="dark"] { background-color: #0f172a !important; color: #e2e8f0; }
         body[data-theme="dark"] > .max-w-3xl { background-color: #1e293b !important; }
         body[data-theme="dark"] .help-dialog { background-color: #1e293b; color: #e2e8f0; }
+        body[data-theme="dark"] .help-close-button:hover { background-color: #064e3b; color: #6ee7b7; }
         body[data-theme="dark"] .help-dialog .border-slate-200 { border-color: #475569; }
         body[data-theme="dark"] .bg-slate-100,
         body[data-theme="dark"] .bg-slate-50 { background-color: #273449 !important; }
