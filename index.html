@@ -10,20 +10,120 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { transition: background-color .2s, color .2s; }
+        .page-count-input {
+            background-color: transparent;
+            appearance: textfield;
+            transition: border-color .2s, box-shadow .2s;
+        }
+        .page-count-input::-webkit-inner-spin-button,
+        .page-count-input::-webkit-outer-spin-button { appearance: none; margin: 0; }
+        .page-count-input:focus {
+            border-color: #059669;
+            outline: none;
+            box-shadow: none;
+        }
+        .page-count-controls {
+            position: absolute;
+            top: 0;
+            right: 0;
+            display: flex;
+            height: 100%;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .page-count-control {
+            display: grid;
+            width: 2rem;
+            flex: 1;
+            place-items: center;
+            color: #059669;
+            background: transparent;
+        }
+        .page-count-control:hover { color: #047857; }
+        .page-count-control:focus-visible { outline: 2px solid #6ee7b7; outline-offset: -2px; }
+        body[data-theme="dark"] .page-count-control { color: #10b981; }
+        body[data-theme="dark"] .page-count-control:hover { color: #34d399; }
         .calculate-button { transition: background-color .2s, box-shadow .2s, transform .2s; }
         .calculate-button:hover {
             background-color: #047857;
             box-shadow: 0 8px 18px rgba(5, 150, 105, .3);
-            transform: translateY(-2px);
         }
         .calculate-button:active { transform: translateY(0); }
         .calculate-button:focus-visible { outline: 3px solid #6ee7b7; outline-offset: 3px; }
-        .copy-button { transition: background-color .2s, border-color .2s, color .2s; }
-        .copy-button:hover {
-            border-color: #047857 !important;
-            background-color: #047857 !important;
-            color: #fff !important;
+        .calculate-dots { display: inline-flex; gap: .125rem; margin-left: .125rem; }
+        .calculate-dots span { opacity: 0; }
+        .calculating .calculate-dots span { animation: calculate-dot .9s ease-in-out forwards; }
+        .calculating .calculate-dots span:nth-child(2) { animation-delay: .2s; }
+        .calculating .calculate-dots span:nth-child(3) { animation-delay: .4s; }
+        @keyframes calculate-dot {
+            0%, 15%, 100% { opacity: 0; }
+            35%, 65% { opacity: 1; }
         }
+        @media (prefers-reduced-motion: reduce) {
+            .calculating .calculate-dots span { animation: none; }
+        }
+        body[data-theme="light"] .save-button { background-color: #1e293b; }
+        body[data-theme="light"] .calculate-button.save-button:hover {
+            background-color: #0f172a;
+            box-shadow: 0 8px 18px rgba(15, 23, 42, .3);
+        }
+        .custom-checkbox {
+            position: relative;
+            cursor: pointer;
+        }
+        .custom-checkbox-input {
+            position: absolute;
+            width: 1.125rem;
+            height: 1.125rem;
+            margin: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .custom-checkbox-mark {
+            display: grid;
+            width: 1.125rem;
+            height: 1.125rem;
+            flex: none;
+            place-items: center;
+            border: 1.5px solid #94a3b8;
+            border-radius: .375rem;
+            background: linear-gradient(145deg, #fff, #f1f5f9);
+            transition: background-color .2s, border-color .2s, box-shadow .2s, transform .2s;
+        }
+        .custom-checkbox-mark svg { display: none; }
+        .custom-checkbox-input:checked + .custom-checkbox-mark {
+            border-color: #059669;
+            background: linear-gradient(145deg, #10b981, #047857);
+            box-shadow: 0 2px 6px rgba(5, 150, 105, .3);
+        }
+        .custom-checkbox-input:checked + .custom-checkbox-mark svg { display: block; }
+        .custom-checkbox-input:focus-visible + .custom-checkbox-mark {
+            outline: 3px solid #6ee7b7;
+            outline-offset: 3px;
+        }
+        body[data-theme="dark"] .custom-checkbox-mark {
+            border-color: #64748b;
+            background: linear-gradient(145deg, #334155, #1e293b);
+        }
+        * {
+            scrollbar-color: #059669 #e2e8f0;
+            scrollbar-width: auto;
+        }
+        *::-webkit-scrollbar { width: 1rem; height: 1rem; }
+        *::-webkit-scrollbar-track { background: #e2e8f0; }
+        *::-webkit-scrollbar-thumb {
+            border: 2px solid #e2e8f0;
+            background: #059669;
+        }
+        *::-webkit-scrollbar-thumb:hover { background: #047857; }
+        body[data-theme="dark"] * {
+            scrollbar-color: #059669 #1e293b;
+        }
+        body[data-theme="dark"] *::-webkit-scrollbar-track { background: #1e293b; }
+        body[data-theme="dark"] *::-webkit-scrollbar-thumb { border-color: #1e293b; }
+        html[data-theme="dark"] { scrollbar-color: #059669 #0f172a; }
+        html[data-theme="dark"]::-webkit-scrollbar-track { background: #0f172a; }
+        html[data-theme="dark"]::-webkit-scrollbar-thumb { border-color: #0f172a; }
         #sheetPreview { max-height: 28rem; overflow: auto; }
         .sheet-card { min-width: 10rem; border: 1px solid #cbd5e1; border-radius: .75rem; background: white; padding: .75rem; }
         .sheet-side { display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; border: 1px solid #cbd5e1; border-radius: .4rem; }
@@ -45,6 +145,8 @@
         body[data-theme="dark"] textarea,
         body[data-theme="dark"] input,
         body[data-theme="dark"] select { background-color: #0f172a; color: #e2e8f0; border-color: #475569; }
+        body[data-theme="dark"] .page-count-input { background-color: transparent; }
+        body[data-theme="dark"] .page-count-input:focus { border-color: #10b981 !important; }
         body[data-theme="dark"] .sheet-card { background: #273449; border-color: #475569; }
         body[data-theme="dark"] .sheet-side { border-color: #64748b; }
         body[data-theme="dark"] .sheet-page + .sheet-page { border-color: #64748b; }
@@ -58,13 +160,12 @@
         <!-- Шапка и выбор языка -->
         <div class="flex flex-col sm:flex-row items-center justify-between border-b pb-4 mb-6 gap-4">
             <h1 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-                <span class="bg-emerald-600 text-white px-2 py-1 rounded text-sm">S</span> 
+                <img src="./icon.svg" alt="" class="h-7 w-7 rounded">
                 <span id="t-title">Sahifalovchi</span>
             </h1>
             
             <!-- Переключатель языка -->
             <div class="flex flex-wrap items-center justify-center gap-2">
-                <button type="button" id="installApp" class="rounded-lg border border-emerald-600 bg-emerald-600 px-3 py-2 text-xs font-medium text-white hover:bg-emerald-700">Ilovani o‘rnatish</button>
                 <select id="languageSelect" aria-label="Language" class="border rounded-lg px-2 py-2 text-xs">
                     <option value="uz">O'Z</option>
                     <option value="ru">RU</option>
@@ -81,14 +182,25 @@
         <!-- Управление -->
         <form novalidate onsubmit="calculateBooklet(); return false;" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
             <div>
-                <label id="t-label-pages" class="block text-xs font-medium text-slate-700 mb-1">Barcha sahifalar soni:</label>
-                <input type="number" id="pageCount" placeholder="Sahifalar sonini kiriting" 
-                    class="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500">
+                <label id="t-label-pages" class="block text-sm font-bold text-blue-900 mb-1">Barcha sahifalar soni:</label>
+                <div class="relative">
+                    <input type="number" id="pageCount" placeholder="Sahifalar sonini kiriting"
+                        class="page-count-input w-full border rounded-lg px-3 py-2 pr-10 text-sm">
+                    <div class="page-count-controls" aria-label="Page count controls">
+                        <button type="button" id="increasePageCount" class="page-count-control" aria-label="Sahifalar sonini oshirish">
+                            <svg viewBox="0 0 16 16" class="h-3 w-3" aria-hidden="true"><path d="m3 10 5-5 5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <button type="button" id="decreasePageCount" class="page-count-control" aria-label="Sahifalar sonini kamaytirish">
+                            <svg viewBox="0 0 16 16" class="h-3 w-3" aria-hidden="true"><path d="m3 6 5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                    </div>
+                </div>
             </div>
             <div class="flex items-end">
                 <button type="submit" id="t-btn-calc"
                     class="calculate-button w-full bg-emerald-600 text-white font-medium py-2 px-4 rounded-lg text-sm">
-                    Hisoblash
+                    <span id="t-btn-calc-label">Hisoblash</span>
+                    <span class="calculate-dots" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span>
                 </button>
             </div>
         </form>
@@ -103,7 +215,7 @@
         <div class="mb-4">
             <div class="mb-1 flex items-center justify-between gap-3">
                 <label id="t-label-side1" for="side1" class="block text-sm font-bold text-blue-900">1-taraf (Oldingi tomoni):</label>
-                <button type="button" onclick="copyPages('side1')" id="t-copy-side1" class="copy-button rounded-md border px-3 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50">Nusxalash</button>
+                <button type="button" onclick="copyPages('side1')" id="t-copy-side1" class="calculate-button rounded-lg bg-emerald-600 px-3 py-1 text-xs font-medium text-white">Nusxalash</button>
             </div>
             <textarea id="side1" rows="5" readonly 
                 placeholder="Hisoblash tugmasini bosing — sahifalar roʻyxati shu yerda koʻrinadi."
@@ -114,7 +226,7 @@
         <div class="mb-6">
             <div class="mb-1 flex items-center justify-between gap-3">
                 <label id="t-label-side2" for="side2" class="block text-sm font-bold text-blue-900">2-taraf (Orqa tomoni):</label>
-                <button type="button" onclick="copyPages('side2')" id="t-copy-side2" class="copy-button rounded-md border px-3 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50">Nusxalash</button>
+                <button type="button" onclick="copyPages('side2')" id="t-copy-side2" class="calculate-button rounded-lg bg-emerald-600 px-3 py-1 text-xs font-medium text-white">Nusxalash</button>
             </div>
             <textarea id="side2" rows="5" readonly 
                 placeholder="Hisoblash tugmasini bosing — sahifalar roʻyxati shu yerda koʻrinadi."
@@ -124,8 +236,13 @@
         <section class="mb-6 rounded-lg border p-4">
             <div class="mb-3 flex flex-wrap items-center justify-between gap-3">
                 <h2 id="t-preview-title" class="text-sm font-bold text-slate-800">Предпросмотр порядка листов</h2>
-                <label class="flex items-center gap-2 text-xs text-slate-700">
-                    <input type="checkbox" id="invertFeed" class="h-4 w-4">
+                <label class="custom-checkbox flex items-center gap-2 text-sm font-bold text-blue-900">
+                    <input type="checkbox" id="invertFeed" class="custom-checkbox-input">
+                    <span class="custom-checkbox-mark" aria-hidden="true">
+                        <svg viewBox="0 0 16 16" class="h-3 w-3" fill="none">
+                            <path d="m3.5 8.2 2.8 2.8 6.2-6.2" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </span>
                     <span id="t-invert-label">Varaqlar tartibini teskari o‘zgartirish</span>
                 </label>
             </div>
@@ -138,7 +255,7 @@
         <!-- Кнопки сохранения -->
         <div class="flex justify-end gap-3">
             <button onclick="saveResult()" id="t-btn-save"
-                class="bg-slate-800 hover:bg-slate-900 text-white font-medium py-2 px-5 rounded-lg text-sm transition">
+                class="calculate-button save-button bg-emerald-600 text-white font-medium py-2 px-5 rounded-lg text-sm">
                 TXT formatida saqlash
             </button>
         </div>
@@ -156,19 +273,21 @@
             uz: {
                 title: "Sahifalovchi",
                 labelPages: "Barcha sahifalar soni:",
+                increasePageCount: "Sahifalar sonini oshirish",
+                decreasePageCount: "Sahifalar sonini kamaytirish",
                 pageCountPlaceholder: "Sahifalar sonini kiriting",
                 btnCalc: "Hisoblash",
                 alertPageMultiple: "Kitob sahifalari soni 4 ga karrali bo‘lishi kerak. Qiymat hisoblash uchun {pages} gacha oshirib yaxlitlanadi.",
                 infoSheets: "Kerak boʻladigan A4 varaqlar soni:",
                 infoPages: "Betlar soni:",
-                labelSide1: "1-tomon (Old tomoni):",
-                labelSide2: "2-tomon (Orqa tomoni):",
+                labelSide1: "1-Tomon (old tomoni):",
+                labelSide2: "2-Tomon (orqa tomoni):",
                 resultPlaceholder: "Hisoblash tugmasini bosing — sahifalar roʻyxati shu yerda koʻrinadi.",
                 copyButton: "Nusxalash",
-                copySuccess: "Sahifalar roʻyxati nusxalandi.",
+                copyDone: "Nusxalandi ✓",
                 copyEmpty: "Avval sahifalarni hisoblang.",
                 copyError: "Nusxalab boʻlmadi. Brauzerga almashish buferidan foydalanishga ruxsat bering va qayta urinib koʻring.",
-                previewTitle: "Betlarning varaqlardagi tartibi",
+                previewTitle: "Betlarning varaqlardagi tartibi:",
                 invertLabel: "Varaqlar tartibini teskari o‘zgartirish",
                 feedNormal: "Oddiy tartib: avval tashqi varaq, so‘ng ichki varaqlar.",
                 feedInverted: "Teskari tartib: avval ichki varaqlar, so‘ng tashqi varaq.",
@@ -195,14 +314,14 @@
                 instructionsNote: "Eslatma: ikki tomonlama chop etishda qog‘ozni aylantirish yo‘nalishi printer va dasturga bog‘liq. Sinov varag‘ida betlarning joylashuvini tekshiring. Qalin kitobni bir nechta kichik blok qilib tayyorlash talab etilishi mumkin.",
                 btnSave: "TXT formatida saqlash",
                 alertMin: "Eng kamida 4 ta sahifa boʻlishi kerak!",
-                installApp: "Ilovani o‘rnatish",
-                installUnavailable: "Ilovani o‘rnatish uchun sahifani HTTPS orqali oching, so‘ng brauzer menyusidan «Ilovani o‘rnatish» yoki «Bosh ekranga qo‘shish»ni tanlang.",
                 fileHeader1: "=== 1-TARAF (Oldingi tomoni) ===",
                 fileHeader2: "=== 2-TARAF (Orqa tomoni) ==="
             },
             ru: {
                 title: "Брошюратор",
                 labelPages: "Всего страниц:",
+                increasePageCount: "Увеличить количество страниц",
+                decreasePageCount: "Уменьшить количество страниц",
                 pageCountPlaceholder: "Введите количество страниц",
                 btnCalc: "Рассчитать",
                 alertPageMultiple: "Количество страниц должно быть кратно 4. Значение будет округлено вверх до {pages}.",
@@ -212,10 +331,10 @@
                 labelSide2: "Сторона 2 (оборотная):",
                 resultPlaceholder: "Нажмите «Рассчитать», чтобы увидеть список страниц.",
                 copyButton: "Копировать",
-                copySuccess: "Список страниц скопирован.",
+                copyDone: "Скопировано ✓",
                 copyEmpty: "Сначала рассчитайте страницы.",
                 copyError: "Не удалось скопировать. Разрешите браузеру доступ к буферу обмена и попробуйте ещё раз.",
-                previewTitle: "Визуальный порядок страниц",
+                previewTitle: "Визуальный порядок страниц:",
                 invertLabel: "Обратить порядок листов",
                 feedNormal: "Обычный порядок: сначала внешний лист, затем внутренние.",
                 feedInverted: "Обратный порядок: сначала внутренние листы, затем внешний.",
@@ -242,14 +361,14 @@
                 instructionsNote: "Важно: направление переворота листа при двусторонней печати зависит от принтера и программы. Проверьте ориентацию страниц на пробном листе. Для толстой книги может понадобиться разделить листы на несколько небольших блоков.",
                 btnSave: "Сохранить в TXT",
                 alertMin: "Минимальное количество страниц — 4",
-                installApp: "Установить приложение",
-                installUnavailable: "Чтобы установить приложение, откройте страницу по HTTPS и выберите в меню браузера «Установить приложение» или «Добавить на главный экран».",
                 fileHeader1: "=== 1-СТОРОНА (Лицевая сторона) ===",
                 fileHeader2: "=== 2-СТОРОНА (Оборотная сторона) ==="
             },
             en: {
                 title: "Booklet Maker",
                 labelPages: "Total pages:",
+                increasePageCount: "Increase page count",
+                decreasePageCount: "Decrease page count",
                 pageCountPlaceholder: "Enter the number of pages",
                 btnCalc: "Calculate",
                 alertPageMultiple: "The page count must be a multiple of 4. It will be rounded up to {pages} for the calculation.",
@@ -259,10 +378,10 @@
                 labelSide2: "Side 2 (Back):",
                 resultPlaceholder: "Press “Calculate” to see the page order.",
                 copyButton: "Copy",
-                copySuccess: "Page order copied.",
+                copyDone: "Copied ✓",
                 copyEmpty: "Calculate the page order first.",
                 copyError: "Could not copy. Allow clipboard access in your browser and try again.",
-                previewTitle: "Visual page order",
+                previewTitle: "Visual page order:",
                 invertLabel: "Reverse sheet order",
                 feedNormal: "Normal order: outer sheet first, followed by the inner sheets.",
                 feedInverted: "Reversed order: inner sheets first, followed by the outer sheet.",
@@ -289,8 +408,6 @@
                 instructionsNote: "Note: the paper-flip direction for duplex printing varies by printer and software. Check the page orientation with a test sheet. For a thick book, you may need to split the sheets into several smaller sections.",
                 btnSave: "Save as TXT",
                 alertMin: "Enter at least 4 pages.",
-                installApp: "Install app",
-                installUnavailable: "To install the app, open this page over HTTPS, then choose “Install app” or “Add to Home Screen” from your browser menu.",
                 fileHeader1: "=== SIDE 1 (Front) ===",
                 fileHeader2: "=== SIDE 2 (Back) ==="
             }
@@ -298,18 +415,40 @@
 
         let currentLang = 'uz';
         let sheetPairs = [];
+        const copyResetTimers = {};
+        let isCalculating = false;
+
+        function getSavedPreference(key, validValues, fallback) {
+            try {
+                const savedValue = localStorage.getItem(key);
+                return validValues.includes(savedValue) ? savedValue : fallback;
+            } catch (error) {
+                console.error(`Failed to load preference "${key}":`, error);
+                return fallback;
+            }
+        }
+
+        function savePreference(key, value) {
+            try {
+                localStorage.setItem(key, value);
+            } catch (error) {
+                console.error(`Failed to save preference "${key}":`, error);
+            }
+        }
 
         function setLanguage(lang) {
             currentLang = lang;
+            savePreference('sahifalovchi-language', lang);
             const t = langData[lang];
             document.documentElement.lang = lang;
             document.getElementById('languageSelect').value = lang;
 
             document.getElementById('t-title').textContent = t.title;
             document.getElementById('t-label-pages').textContent = t.labelPages;
+            document.getElementById('increasePageCount').setAttribute('aria-label', t.increasePageCount);
+            document.getElementById('decreasePageCount').setAttribute('aria-label', t.decreasePageCount);
             document.getElementById('pageCount').placeholder = t.pageCountPlaceholder;
-            document.getElementById('t-btn-calc').textContent = t.btnCalc;
-            document.getElementById('installApp').textContent = t.installApp;
+            document.getElementById('t-btn-calc-label').textContent = t.btnCalc;
             document.getElementById('t-info-sheets').textContent = t.infoSheets;
             document.getElementById('t-info-pages').textContent = t.infoPages;
             document.getElementById('t-label-side1').textContent = t.labelSide1;
@@ -340,8 +479,18 @@
 
         function applyTheme() {
             const theme = document.getElementById('themeSelect').value;
+            savePreference('sahifalovchi-theme', theme);
             const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
             document.body.dataset.theme = isDark ? 'dark' : 'light';
+            document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
+        }
+
+        function adjustPageCount(step) {
+            const pageCount = document.getElementById('pageCount');
+            if (step > 0) pageCount.stepUp();
+            else pageCount.stepDown();
+            pageCount.dispatchEvent(new Event('input', { bubbles: true }));
+            pageCount.dispatchEvent(new Event('change', { bubbles: true }));
         }
 
         function renderSheetPreview() {
@@ -417,7 +566,13 @@
 
         async function copyPages(fieldId) {
             const t = langData[currentLang];
-            const text = document.getElementById(fieldId).value;
+            const field = document.getElementById(fieldId);
+            const selectionStart = field.selectionStart;
+            const selectionEnd = field.selectionEnd;
+            const text = selectionStart !== selectionEnd
+                ? field.value.slice(selectionStart, selectionEnd)
+                : field.value;
+            const button = document.getElementById(`t-copy-${fieldId}`);
 
             if (!text) {
                 alert(t.copyEmpty);
@@ -453,10 +608,17 @@
                 }
             }
 
-            alert(t.copySuccess);
+            button.textContent = t.copyDone;
+            window.clearTimeout(copyResetTimers[fieldId]);
+            copyResetTimers[fieldId] = window.setTimeout(() => {
+                button.textContent = langData[currentLang].copyButton;
+                delete copyResetTimers[fieldId];
+            }, 2000);
         }
 
         function calculateBooklet() {
+            if (isCalculating) return;
+
             let totalPages = parseInt(document.getElementById('pageCount').value) || 0;
             const t = langData[currentLang];
 
@@ -471,25 +633,40 @@
                 document.getElementById('pageCount').value = totalPages;
             }
 
-            let totalSheets = totalPages / 4;
-            document.getElementById('totalSheets').textContent = totalSheets;
-            document.getElementById('pagesResult').textContent = totalPages;
+            const calculateButton = document.getElementById('t-btn-calc');
+            isCalculating = true;
+            calculateButton.disabled = true;
+            calculateButton.setAttribute('aria-busy', 'true');
+            calculateButton.classList.add('calculating');
 
-            sheetPairs = [];
+            try {
+                let totalSheets = totalPages / 4;
+                document.getElementById('totalSheets').textContent = totalSheets;
+                document.getElementById('pagesResult').textContent = totalPages;
 
-            const endPage = totalPages;
-            const sheetsInBook = totalPages / 4;
+                sheetPairs = [];
 
-            for (let i = 0; i < sheetsInBook; i++) {
-                let p1 = endPage - (2 * i);
-                let p2 = 1 + (2 * i);
-                let p3 = 1 + (2 * i) + 1;
-                let p4 = endPage - (2 * i) - 1;
+                const endPage = totalPages;
+                const sheetsInBook = totalPages / 4;
 
-                sheetPairs.push({ front: [p1, p2], back: [p3, p4] });
+                for (let i = 0; i < sheetsInBook; i++) {
+                    let p1 = endPage - (2 * i);
+                    let p2 = 1 + (2 * i);
+                    let p3 = 1 + (2 * i) + 1;
+                    let p4 = endPage - (2 * i) - 1;
+
+                    sheetPairs.push({ front: [p1, p2], back: [p3, p4] });
+                }
+
+                updateFeedOrder();
+            } finally {
+                window.setTimeout(() => {
+                    calculateButton.classList.remove('calculating');
+                    calculateButton.removeAttribute('aria-busy');
+                    calculateButton.disabled = false;
+                    isCalculating = false;
+                }, 1400);
             }
-
-            updateFeedOrder();
         }
 
         function saveResult() {
@@ -504,29 +681,13 @@
         }
 
         const systemThemePreference = window.matchMedia('(prefers-color-scheme: dark)');
-        let deferredInstallPrompt = null;
-        const installButton = document.getElementById('installApp');
-        installButton.addEventListener('click', async () => {
-            if (!deferredInstallPrompt) {
-                alert(langData[currentLang].installUnavailable);
-                return;
-            }
-
-            deferredInstallPrompt.prompt();
-            await deferredInstallPrompt.userChoice;
-            deferredInstallPrompt = null;
-        });
-        window.addEventListener('beforeinstallprompt', event => {
-            event.preventDefault();
-            deferredInstallPrompt = event;
-        });
-        window.addEventListener('appinstalled', () => {
-            deferredInstallPrompt = null;
-            installButton.disabled = true;
-        });
         document.getElementById('languageSelect').addEventListener('change', event => setLanguage(event.target.value));
         document.getElementById('themeSelect').addEventListener('change', applyTheme);
         document.getElementById('invertFeed').addEventListener('change', updateFeedOrder);
+        document.getElementById('increasePageCount').addEventListener('click', () => adjustPageCount(1));
+        document.getElementById('decreasePageCount').addEventListener('click', () => adjustPageCount(-1));
+        document.getElementById('side1').addEventListener('click', () => copyPages('side1'));
+        document.getElementById('side2').addEventListener('click', () => copyPages('side2'));
         if (systemThemePreference.addEventListener) {
             systemThemePreference.addEventListener('change', () => {
                 if (document.getElementById('themeSelect').value === 'system') applyTheme();
@@ -537,7 +698,10 @@
             });
         }
         window.onload = () => {
-            setLanguage('uz');
+            const savedLanguage = getSavedPreference('sahifalovchi-language', Object.keys(langData), 'uz');
+            const savedTheme = getSavedPreference('sahifalovchi-theme', ['system', 'light', 'dark'], 'system');
+            document.getElementById('themeSelect').value = savedTheme;
+            setLanguage(savedLanguage);
             applyTheme();
         };
         if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
