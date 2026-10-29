@@ -309,7 +309,8 @@
                     "Birinchi ro‘yxat varaqning old tomoni, ikkinchisi esa orqa tomoni uchun. Ro‘yxatdagi bir xil o‘rinda turgan juftliklar bitta varaqga tegishli. Birinchi juftlik tashqi varaqqa, keyingilari uning ichiga joylanadigan varaqlarga tegishli.",
                     "Betlarni A4 qog‘ozga albom yo‘nalishida joylashtiring: juftlikdagi birinchi raqam chapda, ikkinchisi o‘ngda bo‘lsin. Qog‘ozning ikkala tomoniga chop eting. Printer qog‘ozni qaysi tomonga aylantirishini tekshirish uchun avval bitta sinov varag‘ini chop qiling.",
                     "Har bir A4 varaqni teng ikkiga buklang. Buklangan varaqlarni birinchi varaq tashqarida qoladigan qilib, ro‘yxat tartibida bir-birining ichiga joylang.",
-                    "Betlar tartibini tekshiring: muqovaning ichki tomonida 2-bet, orqa muqovaning ichki tomonida esa oxirgi bet bo‘lishi kerak. So‘ng buklangan joyidan tikib yoki boshqa usulda mahkamlang."
+                    "Betlar tartibini tekshiring: muqovaning ichki tomonida 2-bet, orqa muqovaning ichki tomonida esa oxirgi bet bo‘lishi kerak. So‘ng buklangan joyidan tikib yoki boshqa usulda mahkamlang.",
+                    "Word orqali buklet chop etish: «Maket» → «Maydonlar» → «Maxsus maydonlar»ni tanlang. «Bir nechta sahifa» ro‘yxatidan «Buklet»ni belgilang, qog‘oz o‘lchamini A4 qilib, «OK»ni bosing. Chop etishda ikki tomonlama rejimni yoqing va avval bir sinov nusxasini chop etib, qog‘ozni aylantirish yo‘nalishini tekshiring. Word buklet tartibini o‘zi joylaydi; bu usulda yuqoridagi sahifalar ro‘yxatidan foydalanmang."
                 ],
                 instructionsNote: "Eslatma: ikki tomonlama chop etishda qog‘ozni aylantirish yo‘nalishi printer va dasturga bog‘liq. Sinov varag‘ida betlarning joylashuvini tekshiring. Qalin kitobni bir nechta kichik blok qilib tayyorlash talab etilishi mumkin.",
                 btnSave: "TXT formatida saqlash",
@@ -356,7 +357,8 @@
                     "Первый список предназначен для лицевой стороны листов, второй — для оборотной. Пары на одинаковых позициях относятся к одному листу. Первая пара — внешний лист, следующие — листы, вкладываемые внутрь.",
                     "Разместите страницы на листе A4 в альбомной ориентации: первое число пары слева, второе справа. Печатайте с обеих сторон. Сначала сделайте пробную печать одного листа, чтобы проверить, как принтер переворачивает бумагу.",
                     "Сложите каждый лист пополам. Вкладывайте сложенные листы друг в друга по порядку: первый лист должен быть снаружи.",
-                    "Проверьте последовательность страниц: на внутренней стороне передней обложки должна быть страница 2, а на внутренней стороне задней обложки — последняя страница. Затем скрепите блок по сгибу."
+                    "Проверьте последовательность страниц: на внутренней стороне передней обложки должна быть страница 2, а на внутренней стороне задней обложки — последняя страница. Затем скрепите блок по сгибу.",
+                    "Печать буклетом из Word: откройте «Макет» → «Поля» → «Настраиваемые поля». В списке «Несколько страниц» выберите «Брошюра», укажите формат бумаги A4 и нажмите «ОК». В настройках печати включите двустороннюю печать и сначала распечатайте пробный экземпляр, чтобы проверить направление переворота бумаги. Word сам расположит страницы для буклета; при этом способе не используйте приведённые выше списки страниц."
                 ],
                 instructionsNote: "Важно: направление переворота листа при двусторонней печати зависит от принтера и программы. Проверьте ориентацию страниц на пробном листе. Для толстой книги может понадобиться разделить листы на несколько небольших блоков.",
                 btnSave: "Сохранить в TXT",
@@ -403,7 +405,8 @@
                     "The first list is for the front of each sheet; the second is for the back. Pairs in the same position belong to the same physical sheet. The first pair is the outer sheet; subsequent sheets fit inside it.",
                     "Arrange the pages on A4 paper in landscape orientation, with the first number on the left and the second on the right. Print both sides. Test one sheet first to check the printer's paper-flip direction.",
                     "Fold each A4 sheet in half. Insert the folded sheets inside one another in list order, keeping the first sheet on the outside.",
-                    "Check the page sequence: page 2 should be on the inside of the front cover, and the final page on the inside of the back cover. Then bind the booklet along the fold."
+                    "Check the page sequence: page 2 should be on the inside of the front cover, and the final page on the inside of the back cover. Then bind the booklet along the fold.",
+                    "Print a booklet from Word: go to Layout → Margins → Custom Margins. Under “Multiple pages,” choose “Book fold,” set the paper size to A4, and select OK. Enable duplex printing and print a test copy first to check the paper-flip direction. Word arranges booklet pages automatically, so do not use the page lists above with this method."
                 ],
                 instructionsNote: "Note: the paper-flip direction for duplex printing varies by printer and software. Check the page orientation with a test sheet. For a thick book, you may need to split the sheets into several smaller sections.",
                 btnSave: "Save as TXT",
@@ -556,7 +559,8 @@
         }
 
         function updateFeedOrder() {
-            const orderedPairs = document.getElementById('invertFeed').checked
+            const isInverted = document.getElementById('invertFeed').checked;
+            const orderedPairs = isInverted
                 ? [...sheetPairs].reverse()
                 : sheetPairs;
             document.getElementById('side1').value = orderedPairs.map(sheet => sheet.front.join(', ')).join(', ');
