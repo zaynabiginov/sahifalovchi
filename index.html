@@ -129,8 +129,12 @@
         .sheet-side { display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; border: 1px solid #cbd5e1; border-radius: .4rem; }
         .sheet-page { padding: .65rem .25rem; text-align: center; font-weight: 700; }
         .sheet-page + .sheet-page { border-left: 1px dashed #94a3b8; }
+        .help-dialog { width: min(42rem, calc(100% - 2rem)); max-height: 85vh; border: 0; padding: 0; }
+        .help-dialog::backdrop { background: rgba(15, 23, 42, .65); backdrop-filter: blur(3px); }
         body[data-theme="dark"] { background-color: #0f172a !important; color: #e2e8f0; }
         body[data-theme="dark"] > .max-w-3xl { background-color: #1e293b !important; }
+        body[data-theme="dark"] .help-dialog { background-color: #1e293b; color: #e2e8f0; }
+        body[data-theme="dark"] .help-dialog .border-slate-200 { border-color: #475569; }
         body[data-theme="dark"] .bg-slate-100,
         body[data-theme="dark"] .bg-slate-50 { background-color: #273449 !important; }
         body[data-theme="dark"] .text-slate-800,
@@ -213,24 +217,46 @@
 
         <!-- 1-сторона -->
         <div class="mb-4">
-            <div class="mb-1 flex items-center justify-between gap-3">
+            <div class="mb-1 flex flex-wrap items-center justify-between gap-2">
                 <label id="t-label-side1" for="side1" class="block text-sm font-bold text-blue-900">1-taraf (Oldingi tomoni):</label>
-                <button type="button" onclick="copyPages('side1')" id="t-copy-side1" class="calculate-button rounded-lg bg-emerald-600 px-3 py-1 text-xs font-medium text-white">Nusxalash</button>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="copyPages('side1')" id="t-copy-side1" class="calculate-button rounded-lg bg-emerald-600 px-3 py-1 text-xs font-medium text-white">Nusxalash</button>
+                    <label class="custom-checkbox flex items-center gap-2 text-xs font-bold text-blue-900">
+                        <input type="checkbox" id="inline-side1" class="custom-checkbox-input" checked>
+                        <span class="custom-checkbox-mark" aria-hidden="true">
+                            <svg viewBox="0 0 16 16" class="h-3 w-3" fill="none">
+                                <path d="m3.5 8.2 2.8 2.8 6.2-6.2" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </span>
+                        <span id="t-layout-side1">Betlarni bir qatorda ko‘rsatish</span>
+                    </label>
+                </div>
             </div>
             <textarea id="side1" rows="5" readonly 
                 placeholder="Hisoblash tugmasini bosing — sahifalar roʻyxati shu yerda koʻrinadi."
-                class="w-full border rounded-lg p-3 bg-slate-50 text-xs font-mono"></textarea>
+                wrap="soft" class="w-full border rounded-lg p-3 bg-slate-50 text-xs font-mono whitespace-pre-wrap break-words"></textarea>
         </div>
 
         <!-- 2-сторона -->
         <div class="mb-6">
-            <div class="mb-1 flex items-center justify-between gap-3">
+            <div class="mb-1 flex flex-wrap items-center justify-between gap-2">
                 <label id="t-label-side2" for="side2" class="block text-sm font-bold text-blue-900">2-taraf (Orqa tomoni):</label>
-                <button type="button" onclick="copyPages('side2')" id="t-copy-side2" class="calculate-button rounded-lg bg-emerald-600 px-3 py-1 text-xs font-medium text-white">Nusxalash</button>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="copyPages('side2')" id="t-copy-side2" class="calculate-button rounded-lg bg-emerald-600 px-3 py-1 text-xs font-medium text-white">Nusxalash</button>
+                    <label class="custom-checkbox flex items-center gap-2 text-xs font-bold text-blue-900">
+                        <input type="checkbox" id="inline-side2" class="custom-checkbox-input" checked>
+                        <span class="custom-checkbox-mark" aria-hidden="true">
+                            <svg viewBox="0 0 16 16" class="h-3 w-3" fill="none">
+                                <path d="m3.5 8.2 2.8 2.8 6.2-6.2" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </span>
+                        <span id="t-layout-side2">Betlarni bir qatorda ko‘rsatish</span>
+                    </label>
+                </div>
             </div>
             <textarea id="side2" rows="5" readonly 
                 placeholder="Hisoblash tugmasini bosing — sahifalar roʻyxati shu yerda koʻrinadi."
-                class="w-full border rounded-lg p-3 bg-slate-50 text-xs font-mono"></textarea>
+                wrap="soft" class="w-full border rounded-lg p-3 bg-slate-50 text-xs font-mono whitespace-pre-wrap break-words"></textarea>
         </div>
 
         <section class="mb-6 rounded-lg border p-4">
@@ -265,13 +291,62 @@
             <ol id="t-instructions" class="list-decimal space-y-2 pl-5"></ol>
             <p id="t-instructions-note" class="mt-4 rounded-lg bg-amber-50 p-3 text-xs text-amber-900"></p>
         </section>
+
+        <footer class="mt-8 border-t pt-5">
+            <div class="flex flex-col items-center justify-between gap-3 text-center sm:flex-row sm:text-left">
+                <div class="flex items-center gap-3">
+                    <img src="./developer-photo.png" alt="Developer" class="h-12 w-12 rounded-full border-2 border-emerald-600 object-cover">
+                    <div>
+                        <p id="t-footer-title" class="text-xs font-semibold uppercase tracking-wide text-slate-500">Developer</p>
+                        <a id="t-footer-name" href="https://github.com/zaynabiginov/Sahifachi" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-emerald-700 hover:text-emerald-800 hover:underline">GitHub · zaynabiginov/Sahifachi</a>
+                    </div>
+                </div>
+                <p id="t-footer-caption" class="text-xs text-slate-500">Sahifalovchi · Booklet maker</p>
+            </div>
+        </footer>
+
+        <div class="mt-5 flex justify-center">
+            <button type="button" id="t-help-open" aria-haspopup="dialog" aria-controls="helpDialog"
+                class="calculate-button inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-5 py-2 text-sm font-semibold text-white">
+                <svg viewBox="0 0 20 20" class="h-4 w-4" fill="none" aria-hidden="true">
+                    <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.8"/>
+                    <path d="M7.8 7.5a2.25 2.25 0 1 1 3.8 1.63c-.95.9-1.6 1.2-1.6 2.37M10 14.5h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+                <span id="t-help-button">Yordam</span>
+            </button>
+        </div>
     </div>
+
+    <dialog id="helpDialog" class="help-dialog rounded-2xl bg-white text-slate-700 shadow-2xl">
+        <div class="flex max-h-[85vh] flex-col">
+            <div class="flex items-start justify-between gap-4 border-b p-5 sm:p-6">
+                <div>
+                    <h2 id="t-help-title" class="text-xl font-bold text-slate-800"></h2>
+                    <p id="t-help-intro" class="mt-2 text-sm leading-6 text-slate-600"></p>
+                </div>
+                <button type="button" id="t-help-close" aria-label="Close help"
+                    class="rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600">
+                    <svg viewBox="0 0 20 20" class="h-5 w-5" fill="none" aria-hidden="true">
+                        <path d="m5 5 10 10M15 5 5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div id="t-help-sections" class="space-y-5 overflow-y-auto p-5 sm:p-6"></div>
+            <div class="border-t p-4 text-right">
+                <button type="button" id="t-help-done"
+                    class="calculate-button rounded-lg bg-emerald-600 px-5 py-2 text-sm font-semibold text-white"></button>
+            </div>
+        </div>
+    </dialog>
 
     <script>
         // Словарь переводов
         const langData = {
             uz: {
                 title: "Sahifalovchi",
+                footerTitle: "Dasturchi",
+                footerName: "GitHub · zaynabiginov/Sahifachi",
+                footerCaption: "Sahifalovchi · Buklet tayyorlagich",
                 labelPages: "Barcha sahifalar soni:",
                 increasePageCount: "Sahifalar sonini oshirish",
                 decreasePageCount: "Sahifalar sonini kamaytirish",
@@ -282,6 +357,7 @@
                 infoPages: "Betlar soni:",
                 labelSide1: "1-Tomon (old tomoni):",
                 labelSide2: "2-Tomon (orqa tomoni):",
+                layoutToggle: "Betlarni bir qatorda ko‘rsatish",
                 resultPlaceholder: "Hisoblash tugmasini bosing — sahifalar roʻyxati shu yerda koʻrinadi.",
                 copyButton: "Nusxalash",
                 copyDone: "Nusxalandi ✓",
@@ -302,6 +378,46 @@
                 themeSystem: "Tizim bo‘yicha",
                 themeLight: "Yorug‘",
                 themeDark: "Qorong‘i",
+                helpButton: "Yordam",
+                helpTitle: "Saytdan foydalanish qo‘llanmasi",
+                helpIntro: "Sahifalovchi oddiy kitobni A4 varaqlarda buklet qilib chop etish uchun sahifalarni kerakli tartibda hisoblaydi. Sahifalar sonini kiriting, ro‘yxatlarni tekshiring va printerda avval sinov nusxasini chop eting.",
+                helpSections: [
+                    {
+                        title: "Sahifalar soni va hisoblash",
+                        items: [
+                            "«Barcha sahifalar soni» maydoniga kitobdagi jami sahifalar sonini kiriting. Yonidagi yuqori va pastki strelkalar sonni bittaga oshiradi yoki kamaytiradi.",
+                            "«Hisoblash» tugmasi sahifalarni buklet uchun juftlaydi. Har bir A4 varaqda 4 ta kitob sahifasi bo‘ladi. Kiritilgan son 4 ga karrali bo‘lmasa, u keyingi mos songacha yaxlitlanadi.",
+                            "Natija blokida hisoblangan sahifalar soni va kerak bo‘ladigan A4 varaqlar soni ko‘rsatiladi."
+                        ]
+                    },
+                    {
+                        title: "Sahifalar ro‘yxatlari va nusxa olish",
+                        items: [
+                            "«1-Tomon» ro‘yxati varaqlarning old tomoniga, «2-Tomon» ro‘yxati esa orqa tomoniga mo‘ljallangan. Har bir vergul bilan ajratilgan juftlik bitta varaqning chap va o‘ng sahifalarini bildiradi.",
+                            "«Betlarni bir qatorda ko‘rsatish» belgilansa, juftliklar bir qatorda vergullar bilan davom etadi. Belgini olib tashlasangiz, har bir juftlik yangi qatordan boshlanadi; davom etayotgan qator vergul bilan tugaydi.",
+                            "«Nusxalash» tugmasi tegishli ro‘yxatni nusxalaydi. Ro‘yxat matnini sichqoncha bilan belgilab, faqat tanlangan qismini ham nusxalashingiz mumkin. Matn maydoniga bosish ham butun ro‘yxatni yoki tanlangan qismini nusxalaydi.",
+                            "Natija maydonlari o‘qish uchun mo‘ljallangan. Ularni tahrirlab bo‘lmaydi; ro‘yxat sahifalar soni yoki tartib sozlamalari o‘zgarganda qayta tuziladi."
+                        ]
+                    },
+                    {
+                        title: "Varaqlar tartibi va ko‘rgazmali ko‘rinish",
+                        items: [
+                            "«Betlarning varaqlardagi tartibi» bo‘limi har bir varaqdagi old va orqa sahifalarni kichik ko‘rinishda ko‘rsatadi.",
+                            "«Varaqlar tartibini teskari o‘zgartirish» belgisi ro‘yxatlarni va ko‘rgazmali varaqlar ketma-ketligini o‘zgartiradi. Uni chop etish yoki varaqlarni taxlash usulingizga moslab yoqing.",
+                            "Ko‘p varaqli natijalarda ko‘rgazmali ko‘rinish tez ishlashi uchun cheklanishi mumkin, ammo chop etish ro‘yxatlarida barcha varaqlar saqlanadi."
+                        ]
+                    },
+                    {
+                        title: "Saqlash, til va rang mavzusi",
+                        items: [
+                            "«TXT formatida saqlash» tugmasi ikkala tomon ro‘yxatini matn fayli sifatida yuklab beradi.",
+                            "Yuqoridagi til ro‘yxati interfeys tilini o‘zgartiradi. Til tanlovi shu brauzer va qurilmada eslab qolinadi.",
+                            "Rang mavzusi ro‘yxatidan «Tizim bo‘yicha», «Yorug‘» yoki «Qorong‘i» ko‘rinishni tanlang. Tanlov shu brauzer va qurilmada saqlanadi.",
+                            "Pastdagi «Yordam» tugmasi ushbu qo‘llanmani ochadi. Oynani yopish uchun yuqoridagi xoch, «Yopish» tugmasi, Escape tugmasi yoki oynadan tashqariga bosing."
+                        ]
+                    }
+                ],
+                helpClose: "Yopish",
                 instructionsTitle: "Varaqlarni qanday toʻgʻri joylashtirish kerak?",
                 instructions: [
                     "Betlar sonini kiriting va «Hisoblash» tugmasini bosing. Bitta A4 varaqda kitobning 4 ta beti joylashadi.",
@@ -320,6 +436,9 @@
             },
             ru: {
                 title: "Брошюратор",
+                footerTitle: "Разработчик",
+                footerName: "GitHub · zaynabiginov/Sahifachi",
+                footerCaption: "Sahifalovchi · Создание буклетов",
                 labelPages: "Всего страниц:",
                 increasePageCount: "Увеличить количество страниц",
                 decreasePageCount: "Уменьшить количество страниц",
@@ -330,6 +449,7 @@
                 infoPages: "Количество страниц:",
                 labelSide1: "Сторона 1 (лицевая):",
                 labelSide2: "Сторона 2 (оборотная):",
+                layoutToggle: "Показывать страницы в строку",
                 resultPlaceholder: "Нажмите «Рассчитать», чтобы увидеть список страниц.",
                 copyButton: "Копировать",
                 copyDone: "Скопировано ✓",
@@ -350,6 +470,46 @@
                 themeSystem: "Как в системе",
                 themeLight: "Светлая",
                 themeDark: "Тёмная",
+                helpButton: "Помощь",
+                helpTitle: "Руководство по сайту",
+                helpIntro: "«Брошюратор» рассчитывает порядок страниц для печати обычной книги в виде буклета на листах A4. Введите количество страниц, проверьте списки и сначала распечатайте пробный экземпляр.",
+                helpSections: [
+                    {
+                        title: "Количество страниц и расчёт",
+                        items: [
+                            "Введите общее количество страниц книги в поле «Всего страниц». Стрелки рядом с полем увеличивают или уменьшают значение на одну страницу.",
+                            "Кнопка «Рассчитать» формирует пары страниц для буклета. На каждом листе A4 размещаются 4 страницы книги. Если введённое число не кратно 4, оно округляется вверх до ближайшего подходящего значения.",
+                            "В информационном блоке отображаются итоговое количество страниц и необходимое число листов A4."
+                        ]
+                    },
+                    {
+                        title: "Списки страниц и копирование",
+                        items: [
+                            "Список «Сторона 1» предназначен для лицевой стороны листов, «Сторона 2» — для оборотной. Каждая пара чисел, разделённая запятой, обозначает левую и правую страницы на одной стороне листа.",
+                            "Если включено «Показывать страницы в строку», пары идут в одной строке и разделяются запятыми. Если снять галочку, каждая пара начинается с новой строки; запятая в конце строки показывает, что список продолжается.",
+                            "Кнопка «Копировать» копирует соответствующий список. Можно выделить мышью часть текста и скопировать только выделенное. Щелчок по полю также копирует весь список или выделенный фрагмент.",
+                            "Поля результата предназначены для просмотра. Изменять текст в них нельзя; списки перестраиваются при изменении числа страниц или настроек порядка."
+                        ]
+                    },
+                    {
+                        title: "Порядок листов и визуальный просмотр",
+                        items: [
+                            "Раздел «Визуальный порядок страниц» показывает пары страниц на лицевой и оборотной сторонах каждого листа.",
+                            "Флажок «Обратить порядок листов» меняет порядок списков и последовательность листов в предпросмотре. Используйте его в зависимости от способа печати или укладки листов.",
+                            "Для быстродействия предпросмотр очень большого количества листов может быть ограничен, но списки для печати всегда содержат все листы."
+                        ]
+                    },
+                    {
+                        title: "Сохранение, язык и тема",
+                        items: [
+                            "Кнопка «Сохранить в TXT» скачивает текстовый файл с обоими списками страниц.",
+                            "Список языка вверху меняет язык интерфейса. Выбор запоминается в этом браузере на этом устройстве.",
+                            "В списке темы выберите «Как в системе», «Светлая» или «Тёмная». Выбор темы также запоминается в этом браузере на этом устройстве.",
+                            "Кнопка «Помощь» внизу открывает это руководство. Закройте окно крестиком, кнопкой «Закрыть», клавишей Escape или щелчком за пределами окна."
+                        ]
+                    }
+                ],
+                helpClose: "Закрыть",
                 instructionsTitle: "Как правильно сложить листы?",
                 instructions: [
                     "Введите количество страниц и нажмите «Рассчитать». На одном листе A4 размещаются четыре страницы книги.",
@@ -368,6 +528,9 @@
             },
             en: {
                 title: "Booklet Maker",
+                footerTitle: "Developer",
+                footerName: "GitHub · zaynabiginov/Sahifachi",
+                footerCaption: "Sahifalovchi · Booklet maker",
                 labelPages: "Total pages:",
                 increasePageCount: "Increase page count",
                 decreasePageCount: "Decrease page count",
@@ -378,6 +541,7 @@
                 infoPages: "Page count:",
                 labelSide1: "Side 1 (Front):",
                 labelSide2: "Side 2 (Back):",
+                layoutToggle: "Show pages inline",
                 resultPlaceholder: "Press “Calculate” to see the page order.",
                 copyButton: "Copy",
                 copyDone: "Copied ✓",
@@ -398,6 +562,46 @@
                 themeSystem: "System",
                 themeLight: "Light",
                 themeDark: "Dark",
+                helpButton: "Help",
+                helpTitle: "How to use the site",
+                helpIntro: "Booklet Maker calculates page order for printing a regular book as a booklet on A4 sheets. Enter the page count, review the lists, and print a test copy before printing the full job.",
+                helpSections: [
+                    {
+                        title: "Page count and calculation",
+                        items: [
+                            "Enter the book’s total number of pages in the “Total pages” field. The up and down arrows next to it increase or decrease the value by one.",
+                            "The “Calculate” button arranges page pairs for booklet printing. Each A4 sheet holds 4 book pages. If the entered count is not divisible by 4, it is rounded up to the next suitable number.",
+                            "The information panel shows the resulting page count and the number of A4 sheets required."
+                        ]
+                    },
+                    {
+                        title: "Page lists and copying",
+                        items: [
+                            "The “Side 1” list is for the front of the sheets; “Side 2” is for the back. Each comma-separated pair represents the left and right pages on one side of a sheet.",
+                            "When “Show pages inline” is checked, pairs continue on one line separated by commas. When unchecked, each pair starts on a new line; a trailing comma indicates that the list continues.",
+                            "The “Copy” button copies its corresponding list. You can select part of the text with the mouse to copy only that selection. Clicking inside a field also copies the whole list or the selected text.",
+                            "The result fields are read-only. Their contents are regenerated when the page count or ordering options change."
+                        ]
+                    },
+                    {
+                        title: "Sheet order and visual preview",
+                        items: [
+                            "The “Visual page order” section shows the page pairs on the front and back of each sheet.",
+                            "The “Reverse sheet order” checkbox changes both the lists and the preview sequence. Use it to match your printing or stacking workflow.",
+                            "For responsiveness, the visual preview may be limited for very large jobs, but the print lists always include every sheet."
+                        ]
+                    },
+                    {
+                        title: "Saving, language, and theme",
+                        items: [
+                            "The “Save as TXT” button downloads a text file containing both page lists.",
+                            "Use the language menu at the top to change the interface language. The selection is remembered in this browser on this device.",
+                            "Choose “System”, “Light”, or “Dark” in the theme menu. The theme selection is also remembered in this browser on this device.",
+                            "The “Help” button at the bottom opens this guide. Close the dialog with the X, the “Close” button, Escape, or by clicking outside the dialog."
+                        ]
+                    }
+                ],
+                helpClose: "Close",
                 instructionsTitle: "How should the sheets be folded and assembled?",
                 instructions: [
                     "Enter the page count and press “Calculate”. Each A4 sheet contains four book pages.",
@@ -447,6 +651,9 @@
             document.getElementById('languageSelect').value = lang;
 
             document.getElementById('t-title').textContent = t.title;
+            document.getElementById('t-footer-title').textContent = t.footerTitle;
+            document.getElementById('t-footer-name').textContent = t.footerName;
+            document.getElementById('t-footer-caption').textContent = t.footerCaption;
             document.getElementById('t-label-pages').textContent = t.labelPages;
             document.getElementById('increasePageCount').setAttribute('aria-label', t.increasePageCount);
             document.getElementById('decreasePageCount').setAttribute('aria-label', t.decreasePageCount);
@@ -456,6 +663,8 @@
             document.getElementById('t-info-pages').textContent = t.infoPages;
             document.getElementById('t-label-side1').textContent = t.labelSide1;
             document.getElementById('t-label-side2').textContent = t.labelSide2;
+            document.getElementById('t-layout-side1').textContent = t.layoutToggle;
+            document.getElementById('t-layout-side2').textContent = t.layoutToggle;
             document.getElementById('side1').placeholder = t.resultPlaceholder;
             document.getElementById('side2').placeholder = t.resultPlaceholder;
             document.getElementById('t-copy-side1').textContent = t.copyButton;
@@ -477,7 +686,36 @@
                 return item;
             }));
             document.getElementById('t-instructions-note').textContent = t.instructionsNote;
+            document.getElementById('t-help-button').textContent = t.helpButton;
+            document.getElementById('t-help-title').textContent = t.helpTitle;
+            document.getElementById('t-help-intro').textContent = t.helpIntro;
+            document.getElementById('t-help-close').setAttribute('aria-label', t.helpClose);
+            document.getElementById('t-help-done').textContent = t.helpClose;
+            renderHelpSections(t.helpSections);
             renderSheetPreview();
+        }
+
+        function renderHelpSections(sections) {
+            const container = document.getElementById('t-help-sections');
+            container.replaceChildren(...sections.map(section => {
+                const article = document.createElement('section');
+                article.className = 'rounded-xl border border-slate-200 bg-slate-50 p-4';
+
+                const heading = document.createElement('h3');
+                heading.className = 'mb-2 font-bold text-slate-800';
+                heading.textContent = section.title;
+
+                const list = document.createElement('ul');
+                list.className = 'list-disc space-y-2 pl-5 text-sm leading-6 text-slate-600';
+                list.replaceChildren(...section.items.map(text => {
+                    const item = document.createElement('li');
+                    item.textContent = text;
+                    return item;
+                }));
+
+                article.append(heading, list);
+                return article;
+            }));
         }
 
         function applyTheme() {
@@ -563,9 +801,22 @@
             const orderedPairs = isInverted
                 ? [...sheetPairs].reverse()
                 : sheetPairs;
-            document.getElementById('side1').value = orderedPairs.map(sheet => sheet.front.join(', ')).join(', ');
-            document.getElementById('side2').value = orderedPairs.map(sheet => sheet.back.join(', ')).join(', ');
+            document.getElementById('side1').value = formatPageList(orderedPairs, 'front', 'side1');
+            document.getElementById('side2').value = formatPageList(orderedPairs, 'back', 'side2');
             renderSheetPreview();
+        }
+
+        function formatPageList(sheets, side, fieldId) {
+            const separator = document.getElementById(`inline-${fieldId}`).checked ? ', ' : ',\n';
+            return sheets.map(sheet => sheet[side].join(', ')).join(separator);
+        }
+
+        function updatePageListLayout(fieldId) {
+            const orderedPairs = document.getElementById('invertFeed').checked
+                ? [...sheetPairs].reverse()
+                : sheetPairs;
+            const side = fieldId === 'side1' ? 'front' : 'back';
+            document.getElementById(fieldId).value = formatPageList(orderedPairs, side, fieldId);
         }
 
         async function copyPages(fieldId) {
@@ -688,6 +939,24 @@
         document.getElementById('languageSelect').addEventListener('change', event => setLanguage(event.target.value));
         document.getElementById('themeSelect').addEventListener('change', applyTheme);
         document.getElementById('invertFeed').addEventListener('change', updateFeedOrder);
+        document.getElementById('inline-side1').addEventListener('change', () => updatePageListLayout('side1'));
+        document.getElementById('inline-side2').addEventListener('change', () => updatePageListLayout('side2'));
+        const helpDialog = document.getElementById('helpDialog');
+        document.getElementById('t-help-open').addEventListener('click', () => helpDialog.showModal());
+        document.getElementById('t-help-close').addEventListener('click', () => helpDialog.close());
+        document.getElementById('t-help-done').addEventListener('click', () => helpDialog.close());
+        helpDialog.addEventListener('cancel', event => {
+            event.preventDefault();
+            helpDialog.close();
+        });
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape' && helpDialog.open) {
+                helpDialog.close();
+            }
+        });
+        helpDialog.addEventListener('click', event => {
+            if (event.target === helpDialog) helpDialog.close();
+        });
         document.getElementById('increasePageCount').addEventListener('click', () => adjustPageCount(1));
         document.getElementById('decreasePageCount').addEventListener('click', () => adjustPageCount(-1));
         document.getElementById('side1').addEventListener('click', () => copyPages('side1'));
