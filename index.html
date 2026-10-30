@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#059669">
     <link rel="manifest" href="./manifest.webmanifest">
     <link rel="icon" href="./icon.svg" type="image/svg+xml">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./assets/js/tailwind.js"></script>
     <link rel="stylesheet" href="./assets/css/styles.css">
 </head>
 <body class="bg-slate-100 min-h-screen p-4 sm:p-8">
@@ -22,16 +22,43 @@
             
             <!-- Переключатель языка -->
             <div class="flex flex-wrap items-center justify-center gap-2">
-                <select id="languageSelect" aria-label="Language" class="border rounded-lg px-2 py-2 text-xs">
-                    <option value="uz">O'Z</option>
-                    <option value="ru">RU</option>
-                    <option value="en">EN</option>
-                </select>
-                <select id="themeSelect" aria-label="Theme" class="border rounded-lg px-2 py-2 text-xs">
-                    <option value="system" id="t-theme-system">System</option>
-                    <option value="light" id="t-theme-light">Light</option>
-                    <option value="dark" id="t-theme-dark">Dark</option>
-                </select>
+                <details id="languageMenu" class="download-menu header-select-menu">
+                    <summary id="languageSelect" aria-label="Language" aria-haspopup="menu" aria-expanded="false">
+                        <span id="languageSelectedLabel">O'Z</span>
+                        <svg viewBox="0 0 16 16" class="header-select-chevron" fill="none" aria-hidden="true">
+                            <path d="m4 6 4 4 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </summary>
+                    <div class="download-menu-items header-select-items" role="menu" aria-label="Language">
+                        <button type="button" role="menuitemradio" aria-checked="true" data-language="uz">O'Z</button>
+                        <button type="button" role="menuitemradio" aria-checked="false" data-language="ru">RU</button>
+                        <button type="button" role="menuitemradio" aria-checked="false" data-language="en">EN</button>
+                    </div>
+                </details>
+                <details id="themeMenu" class="download-menu header-select-menu">
+                    <summary id="themeSelect" aria-label="Theme" aria-haspopup="menu" aria-expanded="false">
+                        <span id="themeSelectedLabel">System</span>
+                        <svg viewBox="0 0 16 16" class="header-select-chevron" fill="none" aria-hidden="true">
+                            <path d="m4 6 4 4 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </summary>
+                    <div class="download-menu-items header-select-items" role="menu" aria-label="Theme">
+                        <button type="button" role="menuitemradio" aria-checked="true" data-theme="system" id="t-theme-system">System</button>
+                        <button type="button" role="menuitemradio" aria-checked="false" data-theme="light" id="t-theme-light">Light</button>
+                        <button type="button" role="menuitemradio" aria-checked="false" data-theme="dark" id="t-theme-dark">Dark</button>
+                    </div>
+                </details>
+                <details id="downloadMenu" class="download-menu">
+                    <summary id="t-download-label" aria-label="Download" title="Download">
+                        <svg viewBox="0 0 20 20" class="h-4 w-4" fill="none" aria-hidden="true">
+                            <path d="M10 2.5v9m0 0 3.5-3.5M10 11.5 6.5 8M3.5 12.5v3A1.5 1.5 0 0 0 5 17h10a1.5 1.5 0 0 0 1.5-1.5v-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </summary>
+                    <div class="download-menu-items">
+                        <a href="https://drive.google.com/file/d/1r70L7J2GbOzo7-I5F86ELP3eC5cDr-mt/view?usp=sharing" download>Windows ".exe"</a>
+                        <button id="t-download-android" type="button" disabled title="Android APK is not available yet">Android ".apk"</button>
+                    </div>
+                </details>
                 <button type="button" id="t-help-open" aria-haspopup="dialog" aria-controls="helpDialog"
                     class="calculate-button inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-3 py-2 text-xs font-semibold text-white">
                     <svg viewBox="0 0 20 20" class="h-4 w-4" fill="none" aria-hidden="true">
@@ -152,16 +179,14 @@
             <p id="t-instructions-note" class="mt-4 rounded-lg bg-amber-50 p-3 text-xs text-amber-900"></p>
         </section>
 
-        <footer class="mt-8 border-t pt-5">
-            <div class="flex flex-col items-center justify-between gap-3 text-center sm:flex-row sm:text-left">
-                <div class="flex items-center gap-3">
-                    <img src="./developer-photo.png" alt="Developer" class="h-12 w-12 rounded-full border-2 border-emerald-600 object-cover">
-                    <div>
-                        <p id="t-footer-title" class="text-xs font-semibold uppercase tracking-wide text-slate-500">Developer</p>
-                        <a id="t-footer-name" href="https://github.com/zaynabiginov/Sahifalovchi" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-emerald-700 hover:text-emerald-800 hover:underline">Zaynabidinov Rahmatillo</a>
-                    </div>
-                </div>
-                <p id="t-footer-caption" class="text-xs text-slate-500">Sahifalovchi · Booklet maker</p>
+        <footer class="mt-8 border-t border-slate-200 pt-5">
+            <div class="rounded-xl bg-slate-800 px-6 py-5">
+                <a href="https://github.com/zaynabiginov/Sahifalovchi" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-base font-medium text-emerald-500 hover:text-emerald-400 hover:underline">
+                    <svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor" aria-hidden="true">
+                        <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.38 7.86 10.9.58.1.79-.25.79-.56v-2.17c-3.2.7-3.88-1.36-3.88-1.36-.53-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.77.11 3.06.74.81 1.19 1.84 1.19 3.1 0 4.43-2.69 5.41-5.25 5.69.41.36.78 1.06.78 2.14v3.18c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/>
+                    </svg>
+                    <span id="t-footer-name">See on GitHub</span>
+                </a>
             </div>
         </footer>
 
