@@ -1,0 +1,45 @@
+{
+  "name": "sahifalovchi-windows",
+  "version": "1.0.0",
+  "description": "Windows desktop application for Sahifalovchi",
+  "main": "main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win portable"
+  },
+  "devDependencies": {
+    "electron": "35.1.5",
+    "electron-builder": "26.0.12"
+  },
+  "build": {
+    "appId": "uz.sahifalovchi.desktop",
+    "productName": "Sahifalovchi",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.cjs",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "..",
+        "to": "site",
+        "filter": [
+          "index.html",
+          "assets/**",
+          "icon.svg",
+          "manifest.webmanifest",
+          "sw.js"
+        ]
+      }
+    ],
+    "win": {
+      "signAndEditExecutable": false,
+      "target": [
+        "portable"
+      ],
+      "artifactName": "Sahifalovchi-${version}-portable.${ext}"
+    }
+  }
+}

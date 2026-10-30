@@ -3,9 +3,7 @@
         const langData = {
             uz: {
                 title: "Sahifalovchi",
-                footerTitle: "Dasturchi",
-                footerName: "Zaynabidinov Rahmatillo",
-                footerCaption: "Sahifalovchi · Buklet tayyorlagich",
+                footerName: "GitHub sahifasiga o'tish",
                 labelPages: "Barcha sahifalar soni:",
                 increasePageCount: "Sahifalar sonini oshirish",
                 decreasePageCount: "Sahifalar sonini kamaytirish",
@@ -37,6 +35,8 @@
                 themeSystem: "Tizim bo‘yicha",
                 themeLight: "Yorug‘",
                 themeDark: "Qorong‘i",
+                downloadLabel: "Yuklab olish",
+                androidDownloadUnavailable: "Android APK fayli hali mavjud emas",
                 helpButton: "Yordam",
                 helpTitle: "Saytdan foydalanish qo‘llanmasi",
                 helpIntro: "Sahifalovchi oddiy kitobni A4 varaqlarda buklet qilib chop etish uchun sahifalarni kerakli tartibda hisoblaydi. Sahifalar sonini kiriting, ro‘yxatlarni tekshiring va printerda avval sinov nusxasini chop eting.",
@@ -95,9 +95,7 @@
             },
             ru: {
                 title: "Брошюратор",
-                footerTitle: "Разработчик",
-                footerName: "Зайнабидинов Рахматулло",
-                footerCaption: "Sahifalovchi · Создание буклетов",
+                footerName: "Посмотрите на GitHub",
                 labelPages: "Всего страниц:",
                 increasePageCount: "Увеличить количество страниц",
                 decreasePageCount: "Уменьшить количество страниц",
@@ -129,6 +127,8 @@
                 themeSystem: "Как в системе",
                 themeLight: "Светлая",
                 themeDark: "Тёмная",
+                downloadLabel: "Скачать",
+                androidDownloadUnavailable: "Файл Android APK пока недоступен",
                 helpButton: "Помощь",
                 helpTitle: "Руководство по сайту",
                 helpIntro: "«Брошюратор» рассчитывает порядок страниц для печати обычной книги в виде буклета на листах A4. Введите количество страниц, проверьте списки и сначала распечатайте пробный экземпляр.",
@@ -187,9 +187,7 @@
             },
             en: {
                 title: "Booklet Maker",
-                footerTitle: "Developer",
-                footerName: "Rahmatillo Zaynabidinov",
-                footerCaption: "Sahifalovchi · Booklet maker",
+                footerName: "See on GitHub",
                 labelPages: "Total pages:",
                 increasePageCount: "Increase page count",
                 decreasePageCount: "Decrease page count",
@@ -221,6 +219,8 @@
                 themeSystem: "System",
                 themeLight: "Light",
                 themeDark: "Dark",
+                downloadLabel: "Download",
+                androidDownloadUnavailable: "Android APK is not available yet",
                 helpButton: "Help",
                 helpTitle: "How to use the site",
                 helpIntro: "Booklet Maker calculates page order for printing a regular book as a booklet on A4 sheets. Enter the page count, review the lists, and print a test copy before printing the full job.",
@@ -283,6 +283,7 @@
         let sheetPairs = [];
         const copyResetTimers = {};
         let isCalculating = false;
+        let calculateAnimationTimer;
 
         function getSavedPreference(key, validValues, fallback) {
             try {
@@ -307,12 +308,13 @@
             savePreference('sahifalovchi-language', lang);
             const t = langData[lang];
             document.documentElement.lang = lang;
-            document.getElementById('languageSelect').value = lang;
+            document.getElementById('languageSelectedLabel').textContent = { uz: "O'Z", ru: 'RU', en: 'EN' }[lang];
+            document.querySelectorAll('#languageMenu [data-language]').forEach(option => {
+                option.setAttribute('aria-checked', String(option.dataset.language === lang));
+            });
 
             document.getElementById('t-title').textContent = t.title;
-            document.getElementById('t-footer-title').textContent = t.footerTitle;
             document.getElementById('t-footer-name').textContent = t.footerName;
-            document.getElementById('t-footer-caption').textContent = t.footerCaption;
             document.getElementById('t-label-pages').textContent = t.labelPages;
             document.getElementById('increasePageCount').setAttribute('aria-label', t.increasePageCount);
             document.getElementById('decreasePageCount').setAttribute('aria-label', t.decreasePageCount);
@@ -335,8 +337,18 @@
             document.getElementById('t-theme-system').textContent = t.themeSystem;
             document.getElementById('t-theme-light').textContent = t.themeLight;
             document.getElementById('t-theme-dark').textContent = t.themeDark;
+            document.getElementById('themeSelectedLabel').textContent = {
+                system: t.themeSystem,
+                light: t.themeLight,
+                dark: t.themeDark
+            }[document.getElementById('themeSelect').dataset.value || 'system'];
             document.getElementById('languageSelect').setAttribute('aria-label', t.languageLabel);
+            document.getElementById('languageMenu').querySelector('[role="menu"]').setAttribute('aria-label', t.languageLabel);
             document.getElementById('themeSelect').setAttribute('aria-label', t.themeLabel);
+            document.getElementById('themeMenu').querySelector('[role="menu"]').setAttribute('aria-label', t.themeLabel);
+            document.getElementById('t-download-label').setAttribute('aria-label', t.downloadLabel);
+            document.getElementById('t-download-label').title = t.downloadLabel;
+            document.getElementById('t-download-android').title = t.androidDownloadUnavailable;
             document.getElementById('t-instructions-title').textContent = t.instructionsTitle;
             const instructions = document.getElementById('t-instructions');
             instructions.replaceChildren(...t.instructions.map(step => {
@@ -378,8 +390,18 @@
         }
 
         function applyTheme() {
-            const theme = document.getElementById('themeSelect').value;
+            const themeSelect = document.getElementById('themeSelect');
+            const theme = themeSelect.dataset.value;
             savePreference('sahifalovchi-theme', theme);
+            const t = langData[currentLang];
+            document.getElementById('themeSelectedLabel').textContent = {
+                system: t.themeSystem,
+                light: t.themeLight,
+                dark: t.themeDark
+            }[theme];
+            document.querySelectorAll('#themeMenu [data-theme]').forEach(option => {
+                option.setAttribute('aria-checked', String(option.dataset.theme === theme));
+            });
             const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
             document.body.dataset.theme = isDark ? 'dark' : 'light';
             document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
@@ -396,18 +418,20 @@
         function renderSheetPreview() {
             const t = langData[currentLang];
             const isInverted = document.getElementById('invertFeed').checked;
-            const orderedPairs = isInverted ? [...sheetPairs].reverse() : sheetPairs;
             const preview = document.getElementById('sheetPreview');
             const emptyMessage = document.getElementById('t-preview-empty');
             const limitMessage = document.getElementById('t-preview-limit');
             const description = document.getElementById('t-feed-description');
             const displayLimit = 200;
+            const displayCount = Math.min(sheetPairs.length, displayLimit);
+            const cards = document.createDocumentFragment();
 
             description.textContent = isInverted ? t.feedInverted : t.feedNormal;
-            preview.replaceChildren();
-            emptyMessage.classList.toggle('hidden', orderedPairs.length > 0);
+            emptyMessage.classList.toggle('hidden', sheetPairs.length > 0);
 
-            orderedPairs.slice(0, displayLimit).forEach((sheet, index) => {
+            for (let index = 0; index < displayCount; index++) {
+                const sheetIndex = isInverted ? sheetPairs.length - index - 1 : index;
+                const sheet = sheetPairs[sheetIndex];
                 const card = document.createElement('article');
                 card.className = 'sheet-card text-xs text-slate-700';
 
@@ -441,41 +465,52 @@
                 });
 
                 card.append(heading, frontLabel, front, backLabel, back);
-                preview.append(card);
-            });
+                cards.append(card);
+            }
+            preview.replaceChildren(cards);
 
-            const omitted = orderedPairs.length - displayLimit;
+            const omitted = sheetPairs.length - displayLimit;
             limitMessage.classList.toggle('hidden', omitted <= 0);
             if (omitted > 0) {
                 limitMessage.textContent = t.previewLimit
                     .replace('{shown}', displayLimit)
-                    .replace('{total}', orderedPairs.length);
+                    .replace('{total}', sheetPairs.length);
             } else {
                 limitMessage.textContent = '';
             }
         }
 
         function updateFeedOrder() {
-            const isInverted = document.getElementById('invertFeed').checked;
-            const orderedPairs = isInverted
-                ? [...sheetPairs].reverse()
-                : sheetPairs;
-            document.getElementById('side1').value = formatPageList(orderedPairs, 'front', 'side1');
-            document.getElementById('side2').value = formatPageList(orderedPairs, 'back', 'side2');
+            document.getElementById('side1').value = formatPageList(sheetPairs, 'front', 'side1');
+            document.getElementById('side2').value = formatPageList(sheetPairs, 'back', 'side2');
             renderSheetPreview();
         }
 
         function formatPageList(sheets, side, fieldId) {
             const separator = document.getElementById(`inline-${fieldId}`).checked ? ', ' : ',\n';
-            return sheets.map(sheet => sheet[side].join(', ')).join(separator);
+            const isInverted = document.getElementById('invertFeed').checked;
+            const pagePairs = new Array(sheets.length);
+            for (let index = 0; index < sheets.length; index++) {
+                const sheetIndex = isInverted ? sheets.length - index - 1 : index;
+                pagePairs[index] = sheets[sheetIndex][side].join(', ');
+            }
+            return pagePairs.join(separator);
         }
 
         function updatePageListLayout(fieldId) {
-            const orderedPairs = document.getElementById('invertFeed').checked
-                ? [...sheetPairs].reverse()
-                : sheetPairs;
             const side = fieldId === 'side1' ? 'front' : 'back';
-            document.getElementById(fieldId).value = formatPageList(orderedPairs, side, fieldId);
+            document.getElementById(fieldId).value = formatPageList(sheetPairs, side, fieldId);
+        }
+
+        function animateCalculateButton() {
+            const button = document.getElementById('t-btn-calc');
+            button.classList.remove('calculating');
+            void button.offsetWidth;
+            button.classList.add('calculating');
+            window.clearTimeout(calculateAnimationTimer);
+            calculateAnimationTimer = window.setTimeout(() => {
+                button.classList.remove('calculating');
+            }, 900);
         }
 
         async function copyPages(fieldId) {
@@ -547,11 +582,8 @@
                 document.getElementById('pageCount').value = totalPages;
             }
 
-            const calculateButton = document.getElementById('t-btn-calc');
+            animateCalculateButton();
             isCalculating = true;
-            calculateButton.disabled = true;
-            calculateButton.setAttribute('aria-busy', 'true');
-            calculateButton.classList.add('calculating');
 
             try {
                 let totalSheets = totalPages / 4;
@@ -574,12 +606,7 @@
 
                 updateFeedOrder();
             } finally {
-                window.setTimeout(() => {
-                    calculateButton.classList.remove('calculating');
-                    calculateButton.removeAttribute('aria-busy');
-                    calculateButton.disabled = false;
-                    isCalculating = false;
-                }, 1400);
+                isCalculating = false;
             }
         }
 
@@ -595,8 +622,46 @@
         }
 
         const systemThemePreference = window.matchMedia('(prefers-color-scheme: dark)');
-        document.getElementById('languageSelect').addEventListener('change', event => setLanguage(event.target.value));
-        document.getElementById('themeSelect').addEventListener('change', applyTheme);
+        const languageMenu = document.getElementById('languageMenu');
+        const themeMenu = document.getElementById('themeMenu');
+        const headerMenus = [languageMenu, themeMenu];
+        headerMenus.forEach(menu => {
+            const summary = menu.querySelector('summary');
+            menu.addEventListener('toggle', () => {
+                summary.setAttribute('aria-expanded', String(menu.open));
+            });
+        });
+        languageMenu.querySelectorAll('[data-language]').forEach(option => {
+            option.addEventListener('click', () => {
+                setLanguage(option.dataset.language);
+                languageMenu.open = false;
+            });
+        });
+        themeMenu.querySelectorAll('[data-theme]').forEach(option => {
+            option.addEventListener('click', () => {
+                document.getElementById('themeSelect').dataset.value = option.dataset.theme;
+                applyTheme();
+                themeMenu.open = false;
+            });
+        });
+        const downloadMenu = document.getElementById('downloadMenu');
+        document.addEventListener('click', event => {
+            if (!downloadMenu.contains(event.target)) downloadMenu.open = false;
+            headerMenus.forEach(menu => {
+                if (!menu.contains(event.target)) menu.open = false;
+            });
+        });
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape') {
+                downloadMenu.open = false;
+                headerMenus.forEach(menu => {
+                    menu.open = false;
+                });
+            }
+        });
+        downloadMenu.querySelector('a').addEventListener('click', () => {
+            downloadMenu.open = false;
+        });
         document.getElementById('invertFeed').addEventListener('change', updateFeedOrder);
         document.getElementById('inline-side1').addEventListener('change', () => updatePageListLayout('side1'));
         document.getElementById('inline-side2').addEventListener('change', () => updatePageListLayout('side2'));
@@ -629,13 +694,11 @@
                 if (document.getElementById('themeSelect').value === 'system') applyTheme();
             });
         }
-        window.onload = () => {
-            const savedLanguage = getSavedPreference('sahifalovchi-language', Object.keys(langData), 'uz');
-            const savedTheme = getSavedPreference('sahifalovchi-theme', ['system', 'light', 'dark'], 'system');
-            document.getElementById('themeSelect').value = savedTheme;
-            setLanguage(savedLanguage);
-            applyTheme();
-        };
+        const savedLanguage = getSavedPreference('sahifalovchi-language', Object.keys(langData), 'uz');
+        const savedTheme = getSavedPreference('sahifalovchi-theme', ['system', 'light', 'dark'], 'system');
+        document.getElementById('themeSelect').dataset.value = savedTheme;
+        setLanguage(savedLanguage);
+        applyTheme();
         if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
             navigator.serviceWorker.register('./sw.js').catch(error => {
                 console.error('Service worker registration failed:', error);

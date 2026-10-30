@@ -38,13 +38,92 @@
             background-color: #047857;
             box-shadow: 0 8px 18px rgba(5, 150, 105, .3);
         }
-        .calculate-button:active { transform: translateY(0); }
+        .calculate-button:active { transform: scale(.98); }
         .calculate-button:focus-visible { outline: 3px solid #6ee7b7; outline-offset: 3px; }
         .calculate-dots { display: inline-flex; gap: .125rem; margin-left: .125rem; }
         .calculate-dots span { opacity: 0; }
         .calculating .calculate-dots span { animation: calculate-dot .9s ease-in-out forwards; }
         .calculating .calculate-dots span:nth-child(2) { animation-delay: .2s; }
         .calculating .calculate-dots span:nth-child(3) { animation-delay: .4s; }
+        .download-menu { position: relative; }
+        .download-menu > summary {
+            display: grid;
+            width: 2rem;
+            height: 2rem;
+            place-items: center;
+            border-radius: .5rem;
+            color: #059669;
+            background-color: transparent;
+            cursor: pointer;
+            list-style: none;
+            transition: background-color .2s, box-shadow .2s;
+        }
+        .download-menu > summary::-webkit-details-marker { display: none; }
+        .download-menu > summary:hover { background-color: transparent; box-shadow: none; }
+        .download-menu > summary:focus-visible { outline: 3px solid #6ee7b7; outline-offset: 3px; }
+        .header-select-menu > summary {
+            display: flex;
+            width: auto;
+            min-width: 4rem;
+            height: 2rem;
+            padding: 0 .625rem;
+            align-items: center;
+            justify-content: center;
+            gap: .5rem;
+            font-size: .75rem;
+            font-weight: 600;
+        }
+        .header-select-menu > summary::-webkit-details-marker { display: none; }
+        .header-select-menu > summary:hover { color: #059669; background-color: transparent; box-shadow: none; }
+        .header-select-menu > summary:focus-visible { outline: 3px solid #6ee7b7; outline-offset: 3px; }
+        .header-select-menu .header-select-chevron { width: .75rem; height: .75rem; }
+        .download-menu-items {
+            position: absolute;
+            z-index: 20;
+            top: calc(100% + .5rem);
+            right: 0;
+            width: max-content;
+            min-width: 100%;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            border-radius: .625rem;
+            background: white;
+            box-shadow: 0 8px 20px rgba(15, 23, 42, .16);
+        }
+        .download-menu-items a,
+        .download-menu-items button {
+            display: block;
+            width: 100%;
+            padding: .625rem .75rem;
+            color: #1e293b;
+            background: transparent;
+            text-align: left;
+            text-decoration: none;
+            white-space: nowrap;
+            font-size: .75rem;
+        }
+        .download-menu-items a:hover,
+        .download-menu-items a:focus-visible,
+        .download-menu-items button:not(:disabled):hover,
+        .download-menu-items button:not(:disabled):focus-visible {
+            background: #ecfdf5;
+            color: #047857;
+            outline: none;
+        }
+        .download-menu-items button:disabled { color: #94a3b8; cursor: not-allowed; }
+        .header-select-menu .download-menu-items button[aria-checked="true"] { color: #047857; font-weight: 600; }
+        body[data-theme="dark"] .download-menu-items { border-color: #475569; background: #1e293b; }
+        body[data-theme="dark"] .download-menu-items a,
+        body[data-theme="dark"] .download-menu-items button { color: #e2e8f0; }
+        body[data-theme="dark"] .download-menu-items a:hover,
+        body[data-theme="dark"] .download-menu-items a:focus-visible,
+        body[data-theme="dark"] .download-menu-items button:not(:disabled):hover,
+        body[data-theme="dark"] .download-menu-items button:not(:disabled):focus-visible {
+            background: #064e3b;
+            color: #a7f3d0;
+        }
+        body[data-theme="dark"] .download-menu-items button:disabled { color: #64748b; }
+        body[data-theme="dark"] .header-select-menu .download-menu-items button[aria-checked="true"] { color: #6ee7b7; }
         @keyframes calculate-dot {
             0%, 15%, 100% { opacity: 0; }
             35%, 65% { opacity: 1; }
