@@ -1,207 +1,175 @@
 # Sahifalovchi
 
-Sahifalovchi — это удобный инструмент для подготовки книги или брошюры к печати в формате буклета на листах A4. Приложение автоматически рассчитывает порядок страниц, количество листов и последовательность их размещения на каждой стороне, чтобы после складывания и печати материал собирался корректно.
+Sahifalovchi is a handy tool for arranging book or booklet pages for printing as an A4 folded booklet. It calculates the page order, the number of sheets required, and the page pairs to print on each side so the finished booklet can be folded and assembled correctly.
 
-Проект представляет собой статическое веб-приложение, которое можно использовать как обычную страницу в браузере, как PWA (установка/запуск в отдельном окне без браузера) или через уже собранный портативный Windows-экзешник.
+The project is a static web application. You can use it in a browser, install or launch it as a Progressive Web App (PWA), or run the included portable Windows executable.
 
-## Что умеет приложение
+## Features
 
-- Вычисляет количество страниц, необходимое для буклета
-- Автоматически округляет количество страниц до ближайшего значения, кратного 4
-- Показывает, сколько листов A4 потребуется для печати
-- Генерирует порядок страниц для первой и второй стороны листа
-- Поддерживает режимы:
-  - обычный порядок страниц
-  - обратный порядок для принтера
-  - группировка пар по строкам или компактное отображение
-- Поддерживает копирование списков страниц в буфер обмена
-- Позволяет сохранять рассчитанные данные в текстовый файл
-- Поддерживает языки: узбекский, русский, английский
-- Есть светлая, тёмная и системная тема
-- Работает офлайн благодаря service worker и кэшированию статических ресурсов
+- Calculates the page order required for a booklet
+- Rounds the page count up to the next multiple of four
+- Shows the number of A4 sheets required
+- Generates page sequences for the front and back of each sheet
+- Offers normal and reversed printer-feed ordering
+- Lets you display page pairs on separate lines or in a compact format
+- Copies page lists to the clipboard
+- Saves calculated page lists as a text file
+- Supports Uzbek, Russian, and English
+- Includes system, light, and dark themes
+- Supports offline use through service-worker caching
 
-## Для чего нужен проект
+## Use cases
 
-Этот инструмент полезен, когда нужно:
+Sahifalovchi is useful when you want to:
 
-- сделать буклет из книги, журнала или учебного материала;
-- распечатать материал на A4 в формате "книжной гармошки";
-- быстро проверить, как будут располагаться страницы на каждом листе;
-- избежать ошибок при вырезании/складывании листов перед печатью.
+- Make a booklet from a book, magazine, or study material
+- Print a document as a folded booklet on A4 paper
+- Preview the page order on each sheet before printing
+- Reduce mistakes when folding and assembling printed sheets
 
-## Основная идея расчёта
+## How the calculation works
 
-Один лист формата A4 в буклете обычно содержит 4 страницы:
+In a booklet, each A4 sheet usually holds four pages:
 
-- 2 страницы на лицевой стороне
-- 2 страницы на оборотной стороне
+- Two pages on the front
+- Two pages on the back
 
-Поэтому приложение ожидает, что общее число страниц будет кратно 4. Если введённое число не соответствует этому правилу, программа автоматически округляет его до ближайшего значения, кратного 4, чтобы расчёт был корректным.
+For this reason, the total page count must be a multiple of four. If the number you enter is not a multiple of four, the app rounds it up to the next multiple of four so the booklet layout can be calculated.
 
-## Быстрый старт
+## Quick start
 
-### Вариант 1: открыть в браузере
+### Option 1: Open in a browser
 
-1. Откройте папку проекта.
-2. Запустите файл `index.html` в браузере.
-3. Введите общее число страниц.
-4. Нажмите кнопку "Hisoblash" (или её аналог на выбранном языке).
-5. Проверьте список страниц и затем распечатайте листы.
+1. Open the project folder.
+2. Open `index.html` in a browser.
+3. Enter the total number of pages.
+4. Click **Calculate** (displayed as **Hisoblash** in Uzbek).
+5. Review the page lists and print the sheets.
 
-### Вариант 2: использовать как PWA
+### Option 2: Use it as a PWA
 
-Проект подключён к файлу `manifest.webmanifest` и использует `sw.js` для кэширования. Это позволяет открыть приложение как standalone-проект, что удобно для локального запуска без браузерной панели навигации.
+The project includes `manifest.webmanifest` and the `sw.js` service worker for caching. When served from a compatible web server, the app can be installed and launched in a standalone window. After its resources have been cached, it can also work offline.
 
-### Вариант 3: запустить готовый Windows-экзешник
+### Option 3: Run the Windows executable
 
-В корне проекта находится папка [Sahifalovchi-Windows](./Sahifalovchi-Windows), в которой лежит портативная Windows-версия.
+The [Sahifalovchi-Windows](./Sahifalovchi-Windows) folder contains a portable Windows version.
 
-Чтобы запустить её:
+1. Open the [Sahifalovchi-Windows](./Sahifalovchi-Windows) folder.
+2. Run `Sahifalovchi-Windows.exe`.
+3. Use the app without installing it.
 
-1. Откройте папку [Sahifalovchi-Windows](./Sahifalovchi-Windows).
-2. Запустите файл `Sahifalovchi-Windows.exe`.
-3. Приложение работает без установки.
-
-## Структура проекта
+## Project structure
 
 ```text
 sahifalovchi/
-├── index.html                    # Основная HTML-страница приложения
-├── manifest.webmanifest          # Метаданные PWA
-├── sw.js                         # Service worker для офлайн-режима и кэширования
-├── icon.svg                      # Иконка приложения
+├── index.html                    # Main application page
+├── manifest.webmanifest          # PWA metadata
+├── sw.js                         # Service worker and caching
+├── icon.svg                      # Application icon
 ├── assets/
 │   ├── css/
-│   │   └── styles.css            # Стили интерфейса
+│   │   └── styles.css            # Interface styles
 │   └── js/
-│       ├── app.js                # Основная логика приложения
-│       └── tailwind.js          # Подключение Tailwind для UI
+│       ├── app.js                # Application logic
+│       └── tailwind.js            # Tailwind CSS runtime
 ├── Sahifalovchi-Windows/
-│   ├── README.txt                # Информация по Windows-версии
-│   ├── Sahifalovchi-Windows.exe  # Готовый исполняемый файл
+│   ├── README.txt                # Windows app instructions
+│   ├── Sahifalovchi-Windows.exe  # Portable Windows executable
 │   └── desktop.ini
 ├── desktop.ini
-└── README.md                    # Документация проекта
+└── README.md                     # Project documentation
 ```
 
-## Как пользоваться
+## Using the app
 
-### 1. Ввод количества страниц
+### 1. Enter the page count
 
-В поле "Barcha sahifalar soni" (или на выбранном языке) введите общее количество страниц книги.
+Enter the total number of pages in the **Total number of pages** field. You can also use the arrow controls beside the field to increase or decrease the value.
 
-Пример:
+Examples: 24, 32, 56, or 100 pages.
 
-- 24 страницы
-- 32 страницы
-- 56 страниц
-- 100 страниц
+### 2. Calculate the layout
 
-### 2. Расчёт
+Click **Calculate**. The app validates the input, rounds it up to a multiple of four if needed, calculates the number of sheets, and generates the page lists for both sides.
 
-После нажатия кнопки расчёта программа:
+### 3. Review the results
 
-- проверяет корректность значения;
-- округляет до ближайшего кратного 4 числа;
-- вычисляет количество листов;
-- формирует список страниц для лицевой и оборотной сторон.
+The app displays:
 
-### 3. Проверка результата
+- The number of A4 sheets required
+- The page count used in the calculation
+- The page pairs for the front and back of the sheets
+- A visual preview of the sheet layouts and their order
 
-Приложение показывает:
+Each pair represents the pages placed side by side on one side of a sheet. The first number is on the left and the second is on the right.
 
-- общее количество листов A4;
-- итоговую длину страницы в печатной последовательности;
-- номера страниц для каждой стороны листа;
-- визуальное представление листов и порядка их раскладки.
+### 4. Copy or save the lists
 
-### 4. Копирование и печать
+You can copy the list for either side to the clipboard and save the results as a text file. Review the lists and visual preview before printing.
 
-Можно:
+### 5. Printing recommendations
 
-- скопировать список страниц для одной стороны в буфер обмена;
-- скопировать список для второй стороны;
-- сохранить итог в текстовом формате;
-- проверить порядок печати до вывода на принтер.
+For a correctly assembled booklet:
 
-### 5. Рекомендации по печати
+1. Print one test sheet first and check the page order.
+2. Use duplex (two-sided) printing.
+3. Check how your printer turns the paper over.
+4. Adjust the **Reverse order for printer** setting if needed.
+5. Once the test sheet is correct, print the remaining sheets.
 
-Для корректного буклета:
+## Interface settings
 
-1. Проверьте порядок на одном пробном листе.
-2. Используйте двустороннюю печать.
-3. Убедитесь, что принтер переворачивает страницы в правильном направлении.
-4. Проверьте настройку "Перевёрнутый порядок" при необходимости.
-5. Сначала распечатайте один тестовый лист, затем целую партию.
+### Language
 
-## Работа с интерфейсом
+Choose one of the available languages from the header:
 
-### Переключение языка
+- O'Z — Uzbek
+- RU — Russian
+- EN — English
 
-В шапке приложения доступны варианты:
+### Theme
 
-- O'Z (узбекский)
-- RU (русский)
-- EN (английский)
+Choose **System**, **Light**, or **Dark**.
 
-### Переключение темы
+### Help
 
-Режимы:
+The in-app help explains how to enter the page count, read the page pairs, understand the sheet sides, and prepare the print job.
 
-- System
-- Light
-- Dark
+## Technical notes
 
-### Вспомогательная панель
+### Static application
 
-В интерфейсе есть кнопка помощи, которая объясняет:
+Sahifalovchi is a client-side app. It does not require a backend, database, or server-side services.
 
-- как считать количество страниц;
-- как читать номера страниц на листах;
-- как понимать левые и правые стороны листа;
-- как настроить печать и порядок листов.
+### PWA and offline support
 
-## Важные особенности проекта
+The service worker caches application resources. Offline availability depends on the app having been opened and its resources cached previously. PWA installation and service workers generally require the app to be served from a secure origin, such as HTTPS or localhost.
 
-### Статический характер
+### Portable Windows version
 
-Это не серверное приложение. Для его работы не требуется база данных, backend или установка сервисов.
+The included Windows executable does not require installation.
 
-### PWA и офлайн
+## Build and update
 
-Приложение поддерживает кэширование через `service worker`, поэтому после первого открытия оно может работать без постоянного подключения к интернету.
-
-### Портативный Windows вариант
-
-Готовая Windows-экзешник версия уже включена в проект и не требует установки. Это удобно для пользователей, которым нужно запустить приложение на компьютере без настройки окружения.
-
-## Сборка и обновление
-
-В каталоге [Sahifalovchi-Windows](./Sahifalovchi-Windows) есть инструкция, что при необходимости обновления собранной версии нужно установить Node.js и выполнить:
+The Windows app's `README.txt` says that Node.js is required to build an updated executable. From the Windows app's source folder, run:
 
 ```bash
 npm ci
 npm run build
 ```
 
-После сборки новый исполняемый файл будет помещён в эту папку.
+The build output will be written to that folder. The source folder and build configuration are not included in this repository snapshot; consult the Windows app's build setup for the exact working directory and prerequisites.
 
-> В текущем репозитории основная часть проекта представляет собой статический интерфейс, а готовый исполняемый файл уже включён в комплект поставки.
+## Limitations
 
-## Ограничения
+- An Android APK is not currently available.
+- The project is intended as a browser-based or local desktop tool, not as a hosted server service.
+- Printer settings, paper orientation, and duplex behavior vary. Always verify the result with a test sheet.
 
-- Android APK пока недоступен.
-- Приложение рассчитано на работу в браузере и/или как локальный десктопный инструмент, а не как полноценный серверный сервис.
-- Для корректной печати всё равно важно проверять настройки принтера и ориентацию листа.
+## License and usage
 
-## Лицензия и использование
+No license file is included in this repository. Check with the project owner before redistributing or incorporating the project into other software.
 
-Проект распространяется как локальный инструмент для подготовки материалов к печати. Вы можете использовать его для личной работы, учебных задач, публикаций и подготовки буклетов в рамках стандартных рабочих процессов.
+## Summary
 
-Если вы собираетесь использовать проект в production-среде, обязательно проверьте правильность выбора формата бумаги, печати и последовательности листов на тестовом образце.
-
-## Резюме
-
-Sahifalovchi — это практичный инструмент для расчёта и подготовки буквлетов на листах A4. Он помогает быстро и без ошибок рассчитать порядок страниц, визуализировать листы и подготовить документ к печати.
-
-Благодаря сочетанию веб-интерфейса, офлайн-кеширования и портативной Windows-версии проект удобно использовать как на обычном компьютере, так и в локальном офлайн-режиме.
+Sahifalovchi helps arrange pages for A4 booklet printing. It calculates the sheet count and page order, previews the layout, and provides lists that can be copied or saved. The web app, offline caching, and portable Windows version make it convenient to use on a computer with or without a continuous internet connection.
