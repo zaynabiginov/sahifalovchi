@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sahifalovchi</title>
     <meta name="theme-color" content="#059669">
+    <script>
+        if (new URLSearchParams(window.location.search).get('desktop') === '1') {
+            document.documentElement.dataset.app = 'desktop';
+        }
+    </script>
     <link rel="manifest" href="./manifest.webmanifest">
     <link rel="icon" href="./icon.svg" type="image/svg+xml">
     <script src="./assets/js/tailwind.js"></script>
@@ -55,7 +60,7 @@
                         </svg>
                     </summary>
                     <div class="download-menu-items">
-                        <a href="https://drive.google.com/file/d/1r70L7J2GbOzo7-I5F86ELP3eC5cDr-mt/view?usp=sharing" download>Windows ".exe"</a>
+                        <a href="https://drive.google.com/file/d/10xyTXkyCs7tszrFzvkIP_mDQ8ZwZUF-L/view">Windows ".exe"</a>
                         <button id="t-download-android" type="button" disabled title="Android APK is not available yet">Android ".apk"</button>
                     </div>
                 </details>

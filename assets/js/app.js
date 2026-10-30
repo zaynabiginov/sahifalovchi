@@ -280,7 +280,8 @@
         };
 
         let currentLang = 'uz';
-        let sheetPairs = [];
+        let bookPageCount = 0;
+        let sheetCount = 0;
         const copyResetTimers = {};
         let isCalculating = false;
         let calculateAnimationTimer;
@@ -423,21 +424,21 @@
             const limitMessage = document.getElementById('t-preview-limit');
             const description = document.getElementById('t-feed-description');
             const displayLimit = 200;
-            const displayCount = Math.min(sheetPairs.length, displayLimit);
+            const displayCount = Math.min(sheetCount, displayLimit);
             const cards = document.createDocumentFragment();
 
             description.textContent = isInverted ? t.feedInverted : t.feedNormal;
-            emptyMessage.classList.toggle('hidden', sheetPairs.length > 0);
+            emptyMessage.classList.toggle('hidden', sheetCount > 0);
 
             for (let index = 0; index < displayCount; index++) {
-                const sheetIndex = isInverted ? sheetPairs.length - index - 1 : index;
-                const sheet = sheetPairs[sheetIndex];
+                const sheetIndex = isInverted ? sheetCount - index - 1 : index;
+                const sheet = getSheetPages(sheetIndex);
                 const card = document.createElement('article');
                 card.className = 'sheet-card text-xs text-slate-700';
 
                 const heading = document.createElement('h3');
                 heading.className = 'mb-2 font-semibold';
-                const physicalSheet = isInverted ? sheetPairs.length - index : index + 1;
+                const physicalSheet = isInverted ? sheetCount - index : index + 1;
                 heading.textContent = `${t.previewFeed} ${index + 1} · ${t.previewSheet} ${physicalSheet}`;
 
                 const frontLabel = document.createElement('p');
@@ -469,37 +470,50 @@
             }
             preview.replaceChildren(cards);
 
-            const omitted = sheetPairs.length - displayLimit;
+            const omitted = sheetCount - displayLimit;
             limitMessage.classList.toggle('hidden', omitted <= 0);
             if (omitted > 0) {
                 limitMessage.textContent = t.previewLimit
                     .replace('{shown}', displayLimit)
-                    .replace('{total}', sheetPairs.length);
+                    .replace('{total}', sheetCount);
             } else {
                 limitMessage.textContent = '';
             }
         }
 
         function updateFeedOrder() {
-            document.getElementById('side1').value = formatPageList(sheetPairs, 'front', 'side1');
-            document.getElementById('side2').value = formatPageList(sheetPairs, 'back', 'side2');
+            document.getElementById('side1').value = formatPageList('front', 'side1');
+            document.getElementById('side2').value = formatPageList('back', 'side2');
             renderSheetPreview();
         }
 
-        function formatPageList(sheets, side, fieldId) {
+        function getSheetPages(index) {
+            return {
+                front: [bookPageCount - 2 * index, 1 + 2 * index],
+                back: [2 + 2 * index, bookPageCount - 2 * index - 1]
+            };
+        }
+
+        function formatPageList(side, fieldId) {
             const separator = document.getElementById(`inline-${fieldId}`).checked ? ', ' : ',\n';
             const isInverted = document.getElementById('invertFeed').checked;
-            const pagePairs = new Array(sheets.length);
-            for (let index = 0; index < sheets.length; index++) {
-                const sheetIndex = isInverted ? sheets.length - index - 1 : index;
-                pagePairs[index] = sheets[sheetIndex][side].join(', ');
+            const pagePairs = new Array(sheetCount);
+            for (let index = 0; index < sheetCount; index++) {
+                const sheetIndex = isInverted ? sheetCount - index - 1 : index;
+                const firstPage = side === 'front'
+                    ? bookPageCount - 2 * sheetIndex
+                    : 2 + 2 * sheetIndex;
+                const secondPage = side === 'front'
+                    ? 1 + 2 * sheetIndex
+                    : bookPageCount - 2 * sheetIndex - 1;
+                pagePairs[index] = `${firstPage}, ${secondPage}`;
             }
             return pagePairs.join(separator);
         }
 
         function updatePageListLayout(fieldId) {
             const side = fieldId === 'side1' ? 'front' : 'back';
-            document.getElementById(fieldId).value = formatPageList(sheetPairs, side, fieldId);
+            document.getElementById(fieldId).value = formatPageList(side, fieldId);
         }
 
         function animateCalculateButton() {
@@ -590,19 +604,8 @@
                 document.getElementById('totalSheets').textContent = totalSheets;
                 document.getElementById('pagesResult').textContent = totalPages;
 
-                sheetPairs = [];
-
-                const endPage = totalPages;
-                const sheetsInBook = totalPages / 4;
-
-                for (let i = 0; i < sheetsInBook; i++) {
-                    let p1 = endPage - (2 * i);
-                    let p2 = 1 + (2 * i);
-                    let p3 = 1 + (2 * i) + 1;
-                    let p4 = endPage - (2 * i) - 1;
-
-                    sheetPairs.push({ front: [p1, p2], back: [p3, p4] });
-                }
+                bookPageCount = totalPages;
+                sheetCount = totalSheets;
 
                 updateFeedOrder();
             } finally {
