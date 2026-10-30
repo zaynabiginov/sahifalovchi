@@ -39,42 +39,41 @@
                 downloadLabel: "Yuklab olish",
                 androidDownloadUnavailable: "Android APK fayli hali mavjud emas",
                 helpButton: "Yordam",
-                helpTitle: "Saytdan foydalanish qo‘llanmasi",
-                helpIntro: "Sahifalovchi oddiy kitobni A4 varaqlarda buklet qilib chop etish uchun sahifalarni kerakli tartibda hisoblaydi. Sahifalar sonini kiriting, ro‘yxatlarni tekshiring va printerda avval sinov nusxasini chop eting.",
+                helpTitle: "Sahifalovchidan foydalanish",
+                helpIntro: "Sahifalovchi kitobni A4 varaqlarda buklet shaklida chop etish uchun sahifalar tartibini hisoblaydi. Sahifalar sonini kiriting, ro‘yxat va varaqlar ko‘rinishini tekshiring, so‘ng to‘liq chop etishdan oldin bitta sinov varag‘ini chiqaring.",
                 helpSections: [
                     {
                         title: "Sahifalar soni va hisoblash",
                         items: [
-                            "«Barcha sahifalar soni» maydoniga kitobdagi jami sahifalar sonini kiriting. Yonidagi yuqori va pastki strelkalar sonni bittaga oshiradi yoki kamaytiradi.",
-                            "«Hisoblash» tugmasi sahifalarni buklet uchun juftlaydi. Har bir A4 varaqda 4 ta kitob sahifasi bo‘ladi. Kiritilgan son 4 ga karrali bo‘lmasa, u keyingi mos songacha yaxlitlanadi.",
-                            "Natija blokida hisoblangan sahifalar soni va kerak bo‘ladigan A4 varaqlar soni ko‘rsatiladi."
+                            "«Barcha sahifalar soni» maydoniga kitobdagi jami sahifalarni kiriting. Yonidagi strelkalar sonni bittaga oshiradi yoki kamaytiradi.",
+                            "«Hisoblash» tugmasini bosing. Buklet uchun har bir A4 varaqqa 4 ta sahifa joylanadi; kiritilgan son 4 ga karrali bo‘lmasa, hisoblashda keyingi 4 ga karrali songacha yaxlitlanadi.",
+                            "Natija blokida hisoblangan sahifalar va kerakli A4 varaqlar soni ko‘rsatiladi. Varaqlar soni hisoblangan sahifalar sonining to‘rtdan biriga teng."
                         ]
                     },
                     {
                         title: "Sahifalar ro‘yxatlari va nusxa olish",
                         items: [
-                            "«1-Tomon» ro‘yxati varaqlarning old tomoniga, «2-Tomon» ro‘yxati esa orqa tomoniga mo‘ljallangan. Har bir vergul bilan ajratilgan juftlik bitta varaqning chap va o‘ng sahifalarini bildiradi.",
-                            "Belgi o‘chirilganda sahifalar juftlari bitta qatorda ko‘rsatiladi. Belgilanganda har bir juftlik yangi qatordan boshlanadi.",
-                            "«Nusxalash» tugmasi tegishli ro‘yxatni nusxalaydi. Ro‘yxat matnini sichqoncha bilan belgilab, faqat tanlangan qismini ham nusxalashingiz mumkin. Matn maydoniga bosish ham butun ro‘yxatni yoki tanlangan qismini nusxalaydi.",
-                            "«Printer uchun teskari tartib» belgisi faqat ikkinchi tomon ro‘yxatidagi varaqlar juftlarining tartibini o‘zgartiradi; har bir juftdagi betlar o‘z o‘rnida qoladi.",
-                            "Natija maydonlari o‘qish uchun mo‘ljallangan. Ularni tahrirlab bo‘lmaydi; ro‘yxat sahifalar soni yoki tartib sozlamalari o‘zgarganda qayta tuziladi."
+                            "«1-Tomon» — varaqlarning old tomoni, «2-Tomon» — orqa tomoni. Har bir ikki sonli juftlik bitta varaq tomonida chap va o‘ngda joylashadigan sahifalarni bildiradi.",
+                            "«Har bir juftlikni yangi qatorda ko‘rsatish» belgisi har bir ro‘yxat uchun alohida ishlaydi: belgi o‘chiq bo‘lsa juftliklar bir qatorda, yoqilsa har biri yangi qatorda ko‘rsatiladi.",
+                            "«Printer uchun teskari tartib» belgisi ikkinchi tomon ro‘yxatidagi juftliklar ketma-ketligini teskari qiladi. Juftlik ichidagi sahifalar joyi o‘zgarmaydi. O‘zgarish varaqlar ko‘rinishida ham aks etadi va belgi holati brauzerda saqlanadi.",
+                            "«Nusxalash» tugmasi tegishli tomon ro‘yxatini ko‘chiradi. Matnning bir qismini belgilasangiz, faqat belgilangan qism nusxalanadi; natija maydoniga bosish ham nusxalashni boshlaydi.",
+                            "Natija maydonlaridagi matnni tahrirlab bo‘lmaydi. Sahifalar soni yoki tartib sozlamalari o‘zgartirilganda ro‘yxatlar va ko‘rinish qayta hisoblanadi."
                         ]
                     },
                     {
                         title: "Varaqlar tartibi va ko‘rgazmali ko‘rinish",
                         items: [
-                            "«Betlarning varaqlardagi tartibi» bo‘limi har bir varaqdagi old va orqa sahifalarni kichik ko‘rinishda ko‘rsatadi.",
-                            "«Varaqlar tartibini teskari o‘zgartirish» belgisi ro‘yxatlarni va ko‘rgazmali varaqlar ketma-ketligini o‘zgartiradi. Uni chop etish yoki varaqlarni taxlash usulingizga moslab yoqing.",
-                            "Ko‘p varaqli natijalarda ko‘rgazmali ko‘rinish tez ishlashi uchun cheklanishi mumkin, ammo chop etish ro‘yxatlarida barcha varaqlar saqlanadi."
+                            "Ko‘rgazmali bo‘lim har bir varaqning old va orqa tomonidagi juftliklarni ko‘rsatadi. Printer uchun teskari tartib yoqilsa, orqa tomonlar ikkinchi ro‘yxatdagi tartibda ko‘rinadi.",
+                            "«Varaqlar tartibini teskari o‘zgartirish» ro‘yxatlardagi varaqlar ketma-ketligini va ko‘rgazmali tartibni o‘zgartiradi. Uni chop etish yoki taxlash usulingizga moslang.",
+                            "Tez ishlashi uchun ko‘rgazmali ko‘rinishda ko‘pi bilan 200 ta varaq ko‘rsatiladi. Chop etish ro‘yxatlarida barcha varaqlar saqlanadi."
                         ]
                     },
                     {
                         title: "Saqlash, til va rang mavzusi",
                         items: [
-                            "«TXT formatida saqlash» tugmasi ikkala tomon ro‘yxatini matn fayli sifatida yuklab beradi.",
-                            "Yuqoridagi til ro‘yxati interfeys tilini o‘zgartiradi. Til tanlovi shu brauzer va qurilmada eslab qolinadi.",
-                            "Rang mavzusi ro‘yxatidan «Tizim bo‘yicha», «Yorug‘» yoki «Qorong‘i» ko‘rinishni tanlang. Tanlov shu brauzer va qurilmada saqlanadi.",
-                            "Pastdagi «Yordam» tugmasi ushbu qo‘llanmani ochadi. Oynani yopish uchun yuqoridagi xoch, «Yopish» tugmasi, Escape tugmasi yoki oynadan tashqariga bosing."
+                            "«TXT formatida saqlash» tugmasi old va orqa tomon ro‘yxatlarini matn fayliga saqlaydi.",
+                            "Til, rang mavzusi va printer uchun teskari tartib belgisi shu brauzerda eslab qolinadi.",
+                            "Yordam oynasini yuqoridagi xoch, «Yopish» tugmasi, Escape tugmasi yoki oyna tashqarisini bosib yoping."
                         ]
                     }
                 ],
@@ -133,42 +132,41 @@
                 downloadLabel: "Скачать",
                 androidDownloadUnavailable: "Файл Android APK пока недоступен",
                 helpButton: "Помощь",
-                helpTitle: "Руководство по сайту",
-                helpIntro: "«Брошюратор» рассчитывает порядок страниц для печати обычной книги в виде буклета на листах A4. Введите количество страниц, проверьте списки и сначала распечатайте пробный экземпляр.",
+                helpTitle: "Как пользоваться брошюратором",
+                helpIntro: "«Брошюратор» рассчитывает порядок страниц для печати книги в виде буклета на листах A4. Введите количество страниц, проверьте списки и визуальный порядок листов, затем перед полной печатью сделайте пробную печать одного листа.",
                 helpSections: [
                     {
                         title: "Количество страниц и расчёт",
                         items: [
-                            "Введите общее количество страниц книги в поле «Всего страниц». Стрелки рядом с полем увеличивают или уменьшают значение на одну страницу.",
-                            "Кнопка «Рассчитать» формирует пары страниц для буклета. На каждом листе A4 размещаются 4 страницы книги. Если введённое число не кратно 4, оно округляется вверх до ближайшего подходящего значения.",
-                            "В информационном блоке отображаются итоговое количество страниц и необходимое число листов A4."
+                            "Введите общее количество страниц книги в поле «Всего страниц». Стрелки рядом с полем изменяют значение на одну страницу.",
+                            "Нажмите «Рассчитать». Для буклета на каждом листе A4 размещаются 4 страницы; если введённое число не кратно 4, при расчёте оно округляется вверх до ближайшего числа, кратного 4.",
+                            "В блоке результатов отображаются рассчитанное количество страниц и число листов A4. Число листов равно количеству рассчитанных страниц, делённому на четыре."
                         ]
                     },
                     {
                         title: "Списки страниц и копирование",
                         items: [
-                            "Список «Сторона 1» предназначен для лицевой стороны листов, «Сторона 2» — для оборотной. Каждая пара чисел, разделённая запятой, обозначает левую и правую страницы на одной стороне листа.",
-                            "Если флажок снят, пары страниц показываются в одной строке. Если флажок установлен, каждая пара начинается с новой строки.",
-                            "Кнопка «Копировать» копирует соответствующий список. Можно выделить мышью часть текста и скопировать только выделенное. Щелчок по полю также копирует весь список или выделенный фрагмент.",
-                            "Флажок «Обратный порядок для принтера» меняет порядок пар листов прямо в списке оборотной стороны; страницы внутри каждой пары остаются на своих местах.",
-                            "Поля результата предназначены для просмотра. Изменять текст в них нельзя; списки перестраиваются при изменении числа страниц или настроек порядка."
+                            "«Сторона 1» — лицевая сторона листов, «Сторона 2» — оборотная. Каждая пара из двух чисел обозначает страницы слева и справа на одной стороне листа.",
+                            "Флажок «Каждую пару с новой строки» работает отдельно для каждого списка. Когда он выключен, пары идут в одной строке; когда включён — каждая пара начинается с новой строки.",
+                            "Флажок «Обратный порядок для принтера» меняет порядок пар только во втором списке, не переставляя страницы внутри пары. Это изменение видно и в визуальном порядке листов; состояние флажка сохраняется в браузере.",
+                            "Кнопка «Копировать» копирует список соответствующей стороны. Если выделить часть текста, копируется только выделенный фрагмент. Щелчок по полю также запускает копирование.",
+                            "Поля результатов доступны только для чтения. Списки и визуальный порядок обновляются при изменении числа страниц или настроек."
                         ]
                     },
                     {
                         title: "Порядок листов и визуальный просмотр",
                         items: [
-                            "Раздел «Визуальный порядок страниц» показывает пары страниц на лицевой и оборотной сторонах каждого листа.",
-                            "Флажок «Обратить порядок листов» меняет порядок списков и последовательность листов в предпросмотре. Используйте его в зависимости от способа печати или укладки листов.",
-                            "Для быстродействия предпросмотр очень большого количества листов может быть ограничен, но списки для печати всегда содержат все листы."
+                            "Визуальный просмотр показывает пары страниц на лицевой и оборотной сторонах каждого листа. Если включён обратный порядок для принтера, оборотная сторона отображается в том же порядке, что и второй список.",
+                            "Флажок «Обратить порядок листов» меняет последовательность листов в обоих списках и в визуальном просмотре. Выберите порядок, подходящий для печати и укладки листов.",
+                            "Для быстродействия визуальный просмотр ограничен 200 листами. Списки для печати при этом содержат все листы."
                         ]
                     },
                     {
                         title: "Сохранение, язык и тема",
                         items: [
-                            "Кнопка «Сохранить в TXT» скачивает текстовый файл с обоими списками страниц.",
-                            "Список языка вверху меняет язык интерфейса. Выбор запоминается в этом браузере на этом устройстве.",
-                            "В списке темы выберите «Как в системе», «Светлая» или «Тёмная». Выбор темы также запоминается в этом браузере на этом устройстве.",
-                            "Кнопка «Помощь» внизу открывает это руководство. Закройте окно крестиком, кнопкой «Закрыть», клавишей Escape или щелчком за пределами окна."
+                            "Кнопка «Сохранить в TXT» скачивает текстовый файл со списками обеих сторон.",
+                            "Язык интерфейса, цветовая тема и состояние флажка обратного порядка для принтера сохраняются в этом браузере.",
+                            "Закройте справку крестиком, кнопкой «Закрыть», клавишей Escape или щелчком за пределами окна."
                         ]
                     }
                 ],
@@ -227,42 +225,41 @@
                 downloadLabel: "Download",
                 androidDownloadUnavailable: "Android APK is not available yet",
                 helpButton: "Help",
-                helpTitle: "How to use the site",
-                helpIntro: "Booklet Maker calculates page order for printing a regular book as a booklet on A4 sheets. Enter the page count, review the lists, and print a test copy before printing the full job.",
+                helpTitle: "How to use Booklet Maker",
+                helpIntro: "Booklet Maker calculates page order for printing a book as a booklet on A4 sheets. Enter the page count, review the lists and sheet preview, then print one test sheet before printing the full job.",
                 helpSections: [
                     {
                         title: "Page count and calculation",
                         items: [
-                            "Enter the book’s total number of pages in the “Total pages” field. The up and down arrows next to it increase or decrease the value by one.",
-                            "The “Calculate” button arranges page pairs for booklet printing. Each A4 sheet holds 4 book pages. If the entered count is not divisible by 4, it is rounded up to the next suitable number.",
-                            "The information panel shows the resulting page count and the number of A4 sheets required."
+                            "Enter the total number of book pages in “Total pages”. The arrows next to the field increase or decrease the value by one.",
+                            "Press “Calculate”. A booklet places 4 book pages on each A4 sheet. If the entered count is not divisible by 4, it is rounded up to the next multiple of 4 for the calculation.",
+                            "The results panel shows the calculated page count and the number of A4 sheets required. The sheet count is the calculated page count divided by four."
                         ]
                     },
                     {
                         title: "Page lists and copying",
                         items: [
-                            "The “Side 1” list is for the front of the sheets; “Side 2” is for the back. Each comma-separated pair represents the left and right pages on one side of a sheet.",
-                            "When unchecked, page pairs are shown on one line. When checked, each pair starts on a new line.",
-                            "The “Copy” button copies its corresponding list. You can select part of the text with the mouse to copy only that selection. Clicking inside a field also copies the whole list or the selected text.",
-                            "The “Reverse feed order for printer” checkbox reverses the sheet pairs directly in the back-side list while keeping the pages within each pair in place.",
-                            "The result fields are read-only. Their contents are regenerated when the page count or ordering options change."
+                            "“Side 1” is for the front of the sheets; “Side 2” is for the back. Each pair of numbers represents the left and right pages on one side of a sheet.",
+                            "The “Show each pair on a new line” checkbox works independently for each list. When off, pairs appear on one line; when on, each pair starts on a new line.",
+                            "The “Reverse feed order for printer” checkbox reverses the pairs in the second list only; page order within each pair stays the same. The sheet preview reflects this change, and the checkbox state is saved in your browser.",
+                            "The “Copy” button copies the corresponding side’s list. Select part of the text to copy only that selection. Clicking inside a result field also starts copying.",
+                            "Result fields are read-only. The lists and sheet preview update when the page count or ordering options change."
                         ]
                     },
                     {
                         title: "Sheet order and visual preview",
                         items: [
-                            "The “Visual page order” section shows the page pairs on the front and back of each sheet.",
-                            "The “Reverse sheet order” checkbox changes both the lists and the preview sequence. Use it to match your printing or stacking workflow.",
-                            "For responsiveness, the visual preview may be limited for very large jobs, but the print lists always include every sheet."
+                            "The visual preview shows the page pairs on the front and back of each sheet. When reverse printer order is enabled, the back sides follow the same order as the second list.",
+                            "The “Reverse sheet order” checkbox changes the sheet sequence in both lists and in the preview. Choose the order that suits your printing or stacking workflow.",
+                            "For responsiveness, the visual preview is limited to 200 sheets. The print lists still include every sheet."
                         ]
                     },
                     {
                         title: "Saving, language, and theme",
                         items: [
-                            "The “Save as TXT” button downloads a text file containing both page lists.",
-                            "Use the language menu at the top to change the interface language. The selection is remembered in this browser on this device.",
-                            "Choose “System”, “Light”, or “Dark” in the theme menu. The theme selection is also remembered in this browser on this device.",
-                            "The “Help” button at the bottom opens this guide. Close the dialog with the X, the “Close” button, Escape, or by clicking outside the dialog."
+                            "The “Save as TXT” button downloads a text file containing both side lists.",
+                            "The interface language, color theme, and reverse printer-order checkbox state are saved in this browser.",
+                            "Close this guide with the X, the “Close” button, Escape, or by clicking outside the dialog."
                         ]
                     }
                 ],
