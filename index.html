@@ -1,212 +1,233 @@
-<!doctype html>
+﻿<!DOCTYPE html>
 <html lang="uz">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      content="O‘zbek yozuvlarini o‘giring: matn, Word, PDF, Excel va PowerPoint fayllarini brauzerda konvertatsiya qiling."
-    />
-    <meta id="theme-color" name="theme-color" content="#111827" />
-    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title></title>
-    <link rel="stylesheet" href="./css/styles.css" />
-  </head>
-  <body data-theme="dark">
-    <main class="app">
-      <header class="topbar">
-        <div class="brand">
-          <svg class="brand-mark" aria-hidden="true" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="40" height="40" rx="12" fill="#087C5D"/>
-            <path d="M10 11.5c4.2-.9 7.5-.3 10 1.8v17c-2.5-2.1-5.8-2.7-10-1.8v-17Z" fill="#fff"/>
-            <path d="M30 11.5c-4.2-.9-7.5-.3-10 1.8v17c2.5-2.1 5.8-2.7 10-1.8v-17Z" fill="#CFF3E4"/>
-            <path d="M20 13.5v16.8M13.5 17h3.4m-3.4 4h3.4m6.2-4h3.4m-3.4 4h3.4" stroke="#08704F" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-          <span id="header-title" data-i18n="headerTitle">O‘zbek alifbosi konvertori</span>
-        </div>
-        <nav class="header-controls" aria-label="Site controls" data-i18n-aria="siteControls">
-          <div class="header-menu">
-            <button class="header-control" id="language-button" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="language-menu">
-              <span id="language-label">O‘Z</span>
-              <svg class="chevron" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 4 4 4-4"/></svg>
-            </button>
-            <div class="menu-options" id="language-menu" role="menu" hidden>
-              <button class="menu-option" type="button" role="menuitemradio" data-locale="uz" aria-checked="true">O‘zbekcha</button>
-              <button class="menu-option" type="button" role="menuitemradio" data-locale="ru" aria-checked="false">Русский</button>
+    <meta name="theme-color" content="#059669">
+    <script>
+        if (new URLSearchParams(window.location.search).get('desktop') === '1') {
+            document.documentElement.dataset.app = 'desktop';
+        }
+    </script>
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="icon" href="./icon.svg" type="image/svg+xml">
+    <script src="./assets/js/tailwind.js"></script>
+    <link rel="stylesheet" href="./assets/css/styles.css">
+</head>
+<body class="bg-slate-100 min-h-screen p-4 sm:p-8">
+
+    <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-md p-6">
+        <!-- Шапка и выбор языка -->
+        <div class="flex flex-col sm:flex-row items-center justify-between border-b pb-4 mb-6 gap-4">
+            <h1 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                <img src="./icon.svg" alt="" class="h-7 w-7 rounded">
+                <span id="t-title">Sahifalovchi</span>
+            </h1>
+            
+            <!-- Переключатель языка -->
+            <div class="flex flex-wrap items-center justify-center gap-2">
+                <details id="languageMenu" class="download-menu header-select-menu">
+                    <summary id="languageSelect" aria-label="Language" aria-haspopup="menu" aria-expanded="false">
+                        <span id="languageSelectedLabel">O'Z</span>
+                        <svg viewBox="0 0 16 16" class="header-select-chevron" fill="none" aria-hidden="true">
+                            <path d="m4 6 4 4 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </summary>
+                    <div class="download-menu-items header-select-items" role="menu" aria-label="Language">
+                        <button type="button" role="menuitemradio" aria-checked="true" data-language="uz">O'Z</button>
+                        <button type="button" role="menuitemradio" aria-checked="false" data-language="ru">RU</button>
+                        <button type="button" role="menuitemradio" aria-checked="false" data-language="en">EN</button>
+                    </div>
+                </details>
+                <details id="themeMenu" class="download-menu header-select-menu">
+                    <summary id="themeSelect" aria-label="Theme" aria-haspopup="menu" aria-expanded="false">
+                        <span id="themeSelectedLabel">System</span>
+                        <svg viewBox="0 0 16 16" class="header-select-chevron" fill="none" aria-hidden="true">
+                            <path d="m4 6 4 4 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </summary>
+                    <div class="download-menu-items header-select-items" role="menu" aria-label="Theme">
+                        <button type="button" role="menuitemradio" aria-checked="true" data-theme="system" id="t-theme-system">System</button>
+                        <button type="button" role="menuitemradio" aria-checked="false" data-theme="light" id="t-theme-light">Light</button>
+                        <button type="button" role="menuitemradio" aria-checked="false" data-theme="dark" id="t-theme-dark">Dark</button>
+                    </div>
+                </details>
+                <details id="downloadMenu" class="download-menu">
+                    <summary id="t-download-label" aria-label="Download" title="Download">
+                        <svg viewBox="0 0 20 20" class="h-4 w-4" fill="none" aria-hidden="true">
+                            <path d="M10 2.5v9m0 0 3.5-3.5M10 11.5 6.5 8M3.5 12.5v3A1.5 1.5 0 0 0 5 17h10a1.5 1.5 0 0 0 1.5-1.5v-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </summary>
+                    <div class="download-menu-items">
+                        <a href="https://drive.google.com/file/d/10xyTXkyCs7tszrFzvkIP_mDQ8ZwZUF-L/view">Windows ".exe"</a>
+                        <button id="t-download-android" type="button" disabled title="Android APK is not available yet">Android ".apk"</button>
+                    </div>
+                </details>
+                <button type="button" id="t-help-open" aria-haspopup="dialog" aria-controls="helpDialog"
+                    class="calculate-button inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-3 py-2 text-xs font-semibold text-white">
+                    <svg viewBox="0 0 20 20" class="h-4 w-4" fill="none" aria-hidden="true">
+                        <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.8"/>
+                        <path d="M7.8 7.5a2.25 2.25 0 1 1 3.8 1.63c-.95.9-1.6 1.2-1.6 2.37M10 14.5h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    </svg>
+                    <span id="t-help-button">Yordam</span>
+                </button>
             </div>
-          </div>
-          <div class="header-menu theme-menu">
-            <button class="header-control" id="theme-button" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="theme-menu">
-              <span id="theme-label">Tizim bo‘yicha</span>
-              <svg class="chevron" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 4 4 4-4"/></svg>
-            </button>
-            <div class="menu-options" id="theme-menu" role="menu" hidden>
-              <button class="menu-option" type="button" role="menuitemradio" data-theme-choice="system" aria-checked="true" data-i18n="themeSystem">Tizim bo‘yicha</button>
-              <button class="menu-option" type="button" role="menuitemradio" data-theme-choice="light" aria-checked="false" data-i18n="themeLight">Yorug‘</button>
-              <button class="menu-option" type="button" role="menuitemradio" data-theme-choice="dark" aria-checked="false" data-i18n="themeDark">Qorong‘i</button>
+        </div>
+
+        <!-- Управление -->
+        <form novalidate onsubmit="calculateBooklet(); return false;" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <div>
+                <label id="t-label-pages" class="block text-sm font-bold text-blue-900 mb-1">Barcha sahifalar soni:</label>
+                <div class="relative">
+                    <input type="number" id="pageCount" placeholder="Sahifalar sonini kiriting"
+                        class="page-count-input w-full border rounded-lg px-3 py-2 pr-10 text-sm">
+                    <div class="page-count-controls" aria-label="Page count controls">
+                        <button type="button" id="increasePageCount" class="page-count-control" aria-label="Sahifalar sonini oshirish">
+                            <svg viewBox="0 0 16 16" class="h-3 w-3" aria-hidden="true"><path d="m3 10 5-5 5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <button type="button" id="decreasePageCount" class="page-count-control" aria-label="Sahifalar sonini kamaytirish">
+                            <svg viewBox="0 0 16 16" class="h-3 w-3" aria-hidden="true"><path d="m3 6 5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                    </div>
+                </div>
             </div>
-          </div>
-          <button class="header-control help-control" id="help-button" type="button">
-            <svg aria-hidden="true" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="8"/><path d="M7.9 7.5a2.2 2.2 0 1 1 3.8 1.5c-1 .9-1.7 1.2-1.7 2.4M10 14.2h.01"/></svg>
-            <span data-i18n="help">Yordam</span>
-          </button>
-        </nav>
-      </header>
+            <div class="flex items-end">
+                <button type="submit" id="t-btn-calc"
+                    class="calculate-button w-full bg-emerald-600 text-white font-medium py-2 px-4 rounded-lg text-sm">
+                    <span id="t-btn-calc-label">Hisoblash</span>
+                    <span class="calculate-dots" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span>
+                </button>
+            </div>
+        </form>
 
-      <section class="intro" aria-labelledby="page-title">
-        <h1 id="page-title" data-i18n="pageTitle">O‘zbek yozuvini bir zumda o‘giring</h1>
-        <p data-i18n="introText">
-          O‘zbek yozuvlari orasida matn va hujjatlarni o‘giring. Kerakli
-          alifbolarni tanlang, matnni kiriting yoki faylni yuklang.
-        </p>
-        <div class="flow" aria-label="Konvertatsiya yo‘nalishi">
-          <span id="flow-source">Ўзбекча кирилл</span>
-          <b aria-hidden="true">→</b>
-          <span id="flow-target">O‘zbek lotin — yangi</span>
-        </div>
-      </section>
-
-      <section class="direction-card" aria-label="Yozuv turini tanlash" data-i18n-aria="directionLabel">
-        <div class="direction-field">
-          <label for="source-alphabet" data-i18n="sourceSelectLabel">Qaysi yozuvdan</label>
-          <select id="source-alphabet">
-            <option value="cyrillic" data-i18n="alphabetCyrillic">O‘zbek kirill yozuvi</option>
-            <option value="latin-new" data-i18n="alphabetNewLatin">O‘zbek lotin yozuvi — yangi (Ö, Ğ, Ş, Ç)</option>
-            <option value="latin-apostrophe" data-i18n="alphabetApostrophe">O‘zbek lotin yozuvi — apostrofli</option>
-          </select>
-        </div>
-        <div class="direction-arrow" aria-hidden="true">→</div>
-        <div class="direction-field">
-          <label for="target-alphabet" data-i18n="targetSelectLabel">Qaysi yozuvga</label>
-          <select id="target-alphabet">
-            <option value="cyrillic" data-i18n="alphabetCyrillic">O‘zbek kirill yozuvi</option>
-            <option value="latin-new" selected data-i18n="alphabetNewLatin">O‘zbek lotin yozuvi — yangi (Ö, Ğ, Ş, Ç)</option>
-            <option value="latin-apostrophe" data-i18n="alphabetApostrophe">O‘zbek lotin yozuvi — apostrofli</option>
-          </select>
-        </div>
-      </section>
-
-      <section aria-labelledby="file-heading">
-        <div class="section-heading">
-          <h2 id="file-heading" data-i18n="fileHeading">Faylni konvertatsiya qilish</h2>
-          <p data-i18n="filePrivacy">Fayl qurilmangizda qayta ishlanadi</p>
+        <!-- Инфо о листах -->
+        <div class="bg-slate-50 p-4 rounded-lg mb-6 text-xs text-slate-600 space-y-1 border">
+            <div><span id="t-info-sheets">Kerak boʻladigan A4 varaqlar soni:</span> <strong id="totalSheets" class="text-slate-900">0</strong></div>
+            <div><span id="t-info-pages">Betlar soni:</span> <strong id="pagesResult" class="text-slate-900">0</strong></div>
         </div>
 
-        <div class="upload-zone" id="drop-zone">
-          <div class="upload-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5" />
-              <path d="M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4" />
-            </svg>
-          </div>
-          <p class="upload-title" data-i18n="uploadTitle">Faylni shu yerga olib keling</p>
-          <p class="upload-help" data-i18n="uploadHelp">.txt, .docx, .pdf, .xlsx yoki .pptx · 15 tagacha fayl · har biri 200 MB gacha</p>
-          <input class="file-picker" id="file-input" type="file" multiple accept=".txt,.docx,.pdf,.xlsx,.pptx,text/plain,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.openxmlformats-officedocument.presentationml.presentation" />
-          <label class="button secondary" for="file-input" data-i18n="chooseFile">Fayl tanlash</label>
+        <!-- 1-сторона -->
+        <div class="mb-4">
+            <div class="mb-1 flex flex-wrap items-center justify-between gap-2">
+                <label id="t-label-side1" for="side1" class="block text-sm font-bold text-blue-900">1-taraf (Oldingi tomoni):</label>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="copyPages('side1')" id="t-copy-side1" class="calculate-button rounded-lg bg-emerald-600 px-3 py-1 text-xs font-medium text-white">Nusxalash</button>
+                    <label class="custom-checkbox flex items-center gap-2 text-xs font-bold text-blue-900">
+                        <input type="checkbox" id="inline-side1" class="custom-checkbox-input">
+                        <span class="custom-checkbox-mark" aria-hidden="true">
+                            <svg viewBox="0 0 16 16" class="h-3 w-3" fill="none">
+                                <path d="m3.5 8.2 2.8 2.8 6.2-6.2" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </span>
+                        <span id="t-layout-side1">Betlarni bir qatorda ko‘rsatish</span>
+                    </label>
+                </div>
+            </div>
+            <textarea id="side1" rows="5" readonly 
+                placeholder="Hisoblash tugmasini bosing — sahifalar roʻyxati shu yerda koʻrinadi."
+                wrap="soft" class="w-full border rounded-lg p-3 bg-slate-50 text-xs font-mono whitespace-pre-wrap break-words"></textarea>
         </div>
 
-        <div class="selected-file" id="selected-file">
-          <div class="file-details">
-            <div class="file-name" id="file-name"></div>
-            <div class="file-size" id="file-size"></div>
-            <ul class="file-list" id="file-list"></ul>
-          </div>
-          <button class="button" id="convert-file" type="button" data-i18n="convertFile">Konvertatsiya qilish</button>
+        <!-- 2-сторона -->
+        <div class="mb-6">
+            <div class="mb-1 flex flex-wrap items-center justify-between gap-2">
+                <label id="t-label-side2" for="side2" class="block text-sm font-bold text-blue-900">2-taraf (Orqa tomoni):</label>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="copyPages('side2')" id="t-copy-side2" class="calculate-button rounded-lg bg-emerald-600 px-3 py-1 text-xs font-medium text-white">Nusxalash</button>
+                    <label class="custom-checkbox flex items-center gap-2 text-xs font-bold text-blue-900">
+                        <input type="checkbox" id="alternateFeedSide2" class="custom-checkbox-input" checked>
+                        <span class="custom-checkbox-mark" aria-hidden="true">
+                            <svg viewBox="0 0 16 16" class="h-3 w-3" aria-hidden="true">
+                                <path d="m3.5 8.2 2.8 2.8 6.2-6.2" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </span>
+                        <span id="t-alternate-feed-side2">Printer feed order</span>
+                    </label>
+                    <label class="custom-checkbox flex items-center gap-2 text-xs font-bold text-blue-900">
+                        <input type="checkbox" id="inline-side2" class="custom-checkbox-input">
+                        <span class="custom-checkbox-mark" aria-hidden="true">
+                            <svg viewBox="0 0 16 16" class="h-3 w-3" fill="none">
+                                <path d="m3.5 8.2 2.8 2.8 6.2-6.2" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </span>
+                        <span id="t-layout-side2">Betlarni bir qatorda ko‘rsatish</span>
+                    </label>
+                </div>
+            </div>
+            <textarea id="side2" rows="5" readonly 
+                placeholder="Hisoblash tugmasini bosing — sahifalar roʻyxati shu yerda koʻrinadi."
+                wrap="soft" class="w-full border rounded-lg p-3 bg-slate-50 text-xs font-mono whitespace-pre-wrap break-words"></textarea>
         </div>
-        <p class="status" id="file-status" role="status" aria-live="polite"></p>
 
-        <section class="result-card" id="file-result" aria-labelledby="file-result-heading">
-          <div class="result-head">
-            <h3 id="file-result-heading" data-i18n="resultHeading">Konvertatsiya natijasi</h3>
-            <button class="button secondary" id="download-all" type="button" disabled data-i18n="downloadAll">Barchasini ZIP qilib yuklab olish</button>
-          </div>
-          <div class="file-results" id="file-results"></div>
+        <section class="mb-6 rounded-lg border p-4">
+            <div class="mb-3 flex flex-wrap items-center justify-between gap-3">
+                <h2 id="t-preview-title" class="text-sm font-bold text-slate-800">Предпросмотр порядка листов</h2>
+                <label class="custom-checkbox flex items-center gap-2 text-sm font-bold text-blue-900">
+                    <input type="checkbox" id="invertFeed" class="custom-checkbox-input">
+                    <span class="custom-checkbox-mark" aria-hidden="true">
+                        <svg viewBox="0 0 16 16" class="h-3 w-3" fill="none">
+                            <path d="m3.5 8.2 2.8 2.8 6.2-6.2" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </span>
+                    <span id="t-invert-label">Varaqlar tartibini teskari o‘zgartirish</span>
+                </label>
+            </div>
+            <p id="t-feed-description" class="mb-3 text-xs text-slate-600"></p>
+            <div id="sheetPreview" class="flex flex-wrap gap-3" aria-live="polite"></div>
+            <p id="t-preview-empty" class="text-xs text-slate-500">Введите число страниц и нажмите «Рассчитать», чтобы увидеть листы.</p>
+            <p id="t-preview-limit" class="mt-2 hidden text-xs text-slate-500"></p>
         </section>
-      </section>
 
-      <div class="divider" aria-hidden="true" data-i18n="dividerText">yoki matnni shu yerda o‘giring</div>
-
-      <section aria-labelledby="text-heading">
-        <div class="section-heading">
-          <h2 id="text-heading" data-i18n="textHeading">Matn bilan ishlash</h2>
-          <p data-i18n="textHelp">Matnni kiriting yoki joylang — natijani nusxalang</p>
+        <!-- Кнопки сохранения -->
+        <div class="flex justify-end gap-3">
+            <button onclick="saveResult()" id="t-btn-save"
+                class="calculate-button save-button bg-emerald-600 text-white font-medium py-2 px-5 rounded-lg text-sm">
+                TXT formatida saqlash
+            </button>
         </div>
-        <div class="text-card">
-          <div class="text-grid">
-            <div class="text-field">
-              <label id="source-text-label" for="source-text">O‘zbek kirill yozuvi</label>
-              <textarea
-                id="source-text"
-                placeholder="Масалан: Ассалому алайкум! Ўзбекистон — гўзал юрт."
-                spellcheck="false"
-                data-i18n-placeholder="sourcePlaceholder"
-              ></textarea>
+
+        <section class="mt-8 border-t pt-6 text-sm text-slate-700">
+            <h2 id="t-instructions-title" class="mb-3 text-lg font-bold text-slate-800">Varaqlarni toʻgʻri joylashtirish</h2>
+            <ol id="t-instructions" class="list-decimal space-y-2 pl-5"></ol>
+            <p id="t-instructions-note" class="mt-4 rounded-lg bg-amber-50 p-3 text-xs text-amber-900"></p>
+        </section>
+
+        <footer class="mt-8 border-t border-slate-200 pt-5">
+            <div class="rounded-xl bg-slate-800 px-6 py-5">
+                <a href="https://github.com/zaynabiginov/Sahifalovchi" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-base font-medium text-emerald-500 hover:text-emerald-400 hover:underline">
+                    <svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor" aria-hidden="true">
+                        <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.38 7.86 10.9.58.1.79-.25.79-.56v-2.17c-3.2.7-3.88-1.36-3.88-1.36-.53-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.77.11 3.06.74.81 1.19 1.84 1.19 3.1 0 4.43-2.69 5.41-5.25 5.69.41.36.78 1.06.78 2.14v3.18c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/>
+                    </svg>
+                    <span id="t-footer-name">See on GitHub</span>
+                </a>
             </div>
-            <div class="swap" aria-hidden="true">→</div>
-            <div class="text-field">
-              <label id="converted-text-label" for="converted-text">O‘zbek lotin yozuvi — yangi</label>
-              <textarea id="converted-text" placeholder="Natija shu yerda ko‘rinadi" readonly data-i18n-placeholder="resultPlaceholder"></textarea>
+        </footer>
+
+    </div>
+
+    <dialog id="helpDialog" class="help-dialog rounded-2xl bg-white text-slate-700 shadow-2xl">
+        <div class="flex max-h-[85vh] flex-col">
+            <div class="flex items-start justify-between gap-4 border-b p-5 sm:p-6">
+                <div>
+                    <h2 id="t-help-title" class="text-xl font-bold text-slate-800"></h2>
+                    <p id="t-help-intro" class="mt-2 text-sm leading-6 text-slate-600"></p>
+                </div>
+                <button type="button" id="t-help-close" aria-label="Close help"
+                    class="help-close-button rounded-lg p-2 text-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-600">
+                    <svg viewBox="0 0 20 20" class="h-5 w-5" fill="none" aria-hidden="true">
+                        <path d="m5 5 10 10M15 5 5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    </svg>
+                </button>
             </div>
-          </div>
-          <div class="text-actions">
-            <button class="button" id="convert-text" type="button" data-i18n="convertText">Matnni konvertatsiya qilish</button>
-            <button class="button secondary" id="copy-text" type="button" disabled data-i18n="copyText">Nusxalash</button>
-            <button class="button secondary" id="download-text" type="button" disabled data-i18n="downloadText">TXT yuklab olish</button>
-            <span class="hint" id="text-status" role="status" aria-live="polite"></span>
-          </div>
+            <div id="t-help-sections" class="space-y-5 overflow-y-auto p-5 sm:p-6"></div>
+            <div class="border-t p-4 text-right">
+                <button type="button" id="t-help-done"
+                    class="calculate-button rounded-lg bg-emerald-600 px-5 py-2 text-sm font-semibold text-white"></button>
+            </div>
         </div>
-      </section>
-
-      <aside class="footer">
-        <span class="footer-mark" aria-hidden="true">✦</span>
-        <span>
-          <strong data-i18n="privacyLabel">Maxfiylik:</strong>
-          <span data-i18n="privacyText">fayllar serverga yuborilmaydi. Barcha konvertatsiya bevosita brauzeringizda amalga oshiriladi.</span>
-        </span>
-      </aside>
-    </main>
-
-    <dialog class="help-dialog" id="help-dialog" aria-labelledby="help-title">
-      <div class="dialog-content">
-        <div class="dialog-head">
-          <h2 id="help-title" data-i18n="helpTitle">Yordam</h2>
-          <button class="dialog-close" id="help-close" type="button" aria-label="Close" data-i18n-aria="closeHelp"><span aria-hidden="true">×</span></button>
-        </div>
-        <div class="help-content">
-          <section>
-            <h3 data-i18n="helpAlphabetsTitle">Yozuv turini tanlash</h3>
-            <p data-i18n="helpAlphabetsText">Manba va natija alifbosini ro‘yxatlardan tanlang: kirill, yangi lotin (Ö, Ğ, Ş, Ç) yoki apostrofli lotin.</p>
-          </section>
-          <section>
-            <h3 data-i18n="helpTextTitle">Matnni o‘girish</h3>
-            <ol>
-              <li data-i18n="helpTextStep1">Matnni chap tomondagi maydonga yozing yoki joylang.</li>
-              <li data-i18n="helpTextStep2">«Matnni konvertatsiya qilish» tugmasini bosing.</li>
-              <li data-i18n="helpTextStep3">O‘ng tomondagi natijani tekshiring; «Nusxalash» tugmasi natijani almashish buferiga oladi.</li>
-            </ol>
-          </section>
-          <section>
-            <h3 data-i18n="helpFilesTitle">Fayl formatlari</h3>
-            <ol>
-              <li data-i18n="helpFilesStep1">«Fayl tanlash»ni bosing yoki fayllarni yuklash maydoniga sudrab olib keling.</li>
-              <li data-i18n="helpFilesStep2">Bir martada 15 tagacha .txt, .docx, .pdf, .xlsx yoki .pptx fayl tanlang. Har bir fayl 200 MB gacha bo‘lishi mumkin.</li>
-              <li data-i18n="helpFilesStep3">«Konvertatsiya qilish» tugmasini bosing. Fayllar navbat bilan qayta ishlanadi; katta hujjatlar ko‘proq vaqt olishi mumkin.</li>
-              <li data-i18n="helpFilesStep4">Muvaffaqiyatli natijalarni alohida yoki barchasini bitta ZIP arxivi bilan yuklab oling. Xatolik yuz bergan fayllar ro‘yxatda alohida ko‘rsatiladi.</li>
-            </ol>
-            <p data-i18n="helpOfficeDetails">DOCX, XLSX va PPTX matni hujjat tuzilishi va formatlashini saqlagan holda o‘zgartiriladi. Eski .doc, .xls va .ppt formatlari qo‘llab-quvvatlanmaydi; ularni avval zamonaviy formatda saqlang.</p>
-          </section>
-          <section>
-            <h3 data-i18n="helpPdfTitle">PDF-файлы</h3>
-            <p data-i18n="helpPdfDetails">PDF sahifalari tasvir ko‘rinishida saqlanadi; topilgan matn taxminan qayta yoziladi. Natijada matn ajratib olinmaydi, sahifa maketi va rangi biroz o‘zgarishi mumkin. Matn qatlamisiz skanerlangan PDF fayllar konvertatsiya qilinmaydi.</p>
-          </section>
-          <section>
-            <h3 data-i18n="helpPrivacyTitle">Maxfiylik va katta fayllar</h3>
-            <p data-i18n="helpPrivacy">Fayllaringiz serverga yuborilmaydi. Ular brauzeringiz xotirasida qayta ishlanadi. Katta fayllar ko‘proq xotira talab qiladi; ishlov berish paytida sahifani yopmang.</p>
-          </section>
-        </div>
-      </div>
     </dialog>
 
-    <script src="./js/app.js" defer></script>
-  </body>
+    <script src="./assets/js/app.js"></script>
+</body>
 </html>
