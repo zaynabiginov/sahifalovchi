@@ -309,6 +309,7 @@
             savePreference('sahifalovchi-language', lang);
             const t = langData[lang];
             document.documentElement.lang = lang;
+            document.title = t.title;
             document.getElementById('languageSelectedLabel').textContent = { uz: "O'Z", ru: 'RU', en: 'EN' }[lang];
             document.querySelectorAll('#languageMenu [data-language]').forEach(option => {
                 option.setAttribute('aria-checked', String(option.dataset.language === lang));
