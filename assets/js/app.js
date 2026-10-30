@@ -81,7 +81,7 @@
                 instructionsTitle: "Varaqlarni qanday toʻgʻri joylashtirish kerak?",
                 instructions: [
                     "Betlar sonini kiriting va «Hisoblash» tugmasini bosing. Bitta A4 varaqda kitobning 4 ta beti joylashadi.",
-                    "Raqamlarni juftlab o‘qing: har bir juftlik A4 varaqning bir tomonida chap va o‘ngda joylashadigan betlarni ko‘rsatadi. Masalan, «368, 1» degani — chapda 368-bet, o‘ngda 1-bet.",
+                    "Raqamlarni juftlab o‘qing: har bir juftlik A4 varaqning bir tomonida chap va o‘ngda joylashadigan betlarni ko‘rsatadi. Masalan, «368,1» degani — chapda 368-bet, o‘ngda 1-bet.",
                     "Birinchi ro‘yxat varaqning old tomoni, ikkinchisi esa orqa tomoni uchun. Ro‘yxatdagi bir xil o‘rinda turgan juftliklar bitta varaqga tegishli. Birinchi juftlik tashqi varaqqa, keyingilari uning ichiga joylanadigan varaqlarga tegishli.",
                     "Betlarni A4 qog‘ozga albom yo‘nalishida joylashtiring: juftlikdagi birinchi raqam chapda, ikkinchisi o‘ngda bo‘lsin. Qog‘ozning ikkala tomoniga chop eting. Printer qog‘ozni qaysi tomonga aylantirishini tekshirish uchun avval bitta sinov varag‘ini chop qiling.",
                     "Har bir A4 varaqni teng ikkiga buklang. Buklangan varaqlarni birinchi varaq tashqarida qoladigan qilib, ro‘yxat tartibida bir-birining ichiga joylang.",
@@ -174,7 +174,7 @@
                 instructionsTitle: "Как правильно сложить листы?",
                 instructions: [
                     "Введите количество страниц и нажмите «Рассчитать». На одном листе A4 размещаются четыре страницы книги.",
-                    "Читайте числа парами: каждая пара показывает страницы, которые будут расположены слева и справа на одной стороне листа A4. Например, «368, 1» означает: слева — страница 368, справа — страница 1.",
+                    "Читайте числа парами: каждая пара показывает страницы, которые будут расположены слева и справа на одной стороне листа A4. Например, «368,1» означает: слева — страница 368, справа — страница 1.",
                     "Первый список предназначен для лицевой стороны листов, второй — для оборотной. Пары на одинаковых позициях относятся к одному листу. Первая пара — внешний лист, следующие — листы, вкладываемые внутрь.",
                     "Разместите страницы на листе A4 в альбомной ориентации: первое число пары слева, второе справа. Печатайте с обеих сторон. Сначала сделайте пробную печать одного листа, чтобы проверить, как принтер переворачивает бумагу.",
                     "Сложите каждый лист пополам. Вкладывайте сложенные листы друг в друга по порядку: первый лист должен быть снаружи.",
@@ -267,7 +267,7 @@
                 instructionsTitle: "How should the sheets be folded and assembled?",
                 instructions: [
                     "Enter the page count and press “Calculate”. Each A4 sheet contains four book pages.",
-                    "Read the numbers in pairs: each pair shows the left and right pages on one side of an A4 sheet. For example, “368, 1” means page 368 on the left and page 1 on the right.",
+                    "Read the numbers in pairs: each pair shows the left and right pages on one side of an A4 sheet. For example, “368,1” means page 368 on the left and page 1 on the right.",
                     "The first list is for the front of each sheet; the second is for the back. Pairs in the same position belong to the same physical sheet. The first pair is the outer sheet; subsequent sheets fit inside it.",
                     "Arrange the pages on A4 paper in landscape orientation, with the first number on the left and the second on the right. Print both sides. Test one sheet first to check the printer's paper-flip direction.",
                     "Fold each A4 sheet in half. Insert the folded sheets inside one another in list order, keeping the first sheet on the outside.",
@@ -503,7 +503,7 @@
         }
 
         function formatPageList(side, fieldId) {
-            const separator = document.getElementById(`inline-${fieldId}`).checked ? ',\n' : ', ';
+            const separator = document.getElementById(`inline-${fieldId}`).checked ? ',\n' : ',';
             const reverseSide2 = side === 'back' && document.getElementById('alternateFeedSide2').checked;
             const invertFeed = document.getElementById('invertFeed').checked;
             const isInverted = side === 'back' ? invertFeed === reverseSide2 : invertFeed;
@@ -516,7 +516,7 @@
                 const secondPage = side === 'front'
                     ? 1 + 2 * sheetIndex
                     : bookPageCount - 2 * sheetIndex - 1;
-                pagePairs[index] = `${firstPage}, ${secondPage}`;
+                pagePairs[index] = `${firstPage},${secondPage}`;
             }
             return pagePairs.join(separator);
         }
