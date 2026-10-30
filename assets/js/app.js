@@ -439,14 +439,14 @@
             for (let index = 0; index < displayCount; index++) {
                 const sheetIndex = isInverted ? sheetCount - index - 1 : index;
                 const sheet = getSheetPages(sheetIndex);
-                const backSheetIndex = isInverted !== reverseSide2 ? sheetCount - index - 1 : index;
+                const backSheetIndex = isInverted === reverseSide2 ? sheetCount - index - 1 : index;
                 const backPages = getSheetPages(backSheetIndex).back;
                 const card = document.createElement('article');
                 card.className = 'sheet-card text-xs text-slate-700';
 
                 const heading = document.createElement('h3');
                 heading.className = 'mb-2 font-semibold';
-                const physicalSheet = isInverted ? sheetCount - index : index + 1;
+                const physicalSheet = sheetIndex + 1;
                 heading.textContent = `${t.previewFeed} ${index + 1} · ${t.previewSheet} ${physicalSheet}`;
 
                 const frontLabel = document.createElement('p');
@@ -505,7 +505,8 @@
         function formatPageList(side, fieldId) {
             const separator = document.getElementById(`inline-${fieldId}`).checked ? ',\n' : ', ';
             const reverseSide2 = side === 'back' && document.getElementById('alternateFeedSide2').checked;
-            const isInverted = document.getElementById('invertFeed').checked !== reverseSide2;
+            const invertFeed = document.getElementById('invertFeed').checked;
+            const isInverted = side === 'back' ? invertFeed === reverseSide2 : invertFeed;
             const pagePairs = new Array(sheetCount);
             for (let index = 0; index < sheetCount; index++) {
                 const sheetIndex = isInverted ? sheetCount - index - 1 : index;
