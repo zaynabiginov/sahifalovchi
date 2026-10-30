@@ -427,6 +427,7 @@
         function renderSheetPreview() {
             const t = langData[currentLang];
             const isInverted = document.getElementById('invertFeed').checked;
+            const reverseSide2 = document.getElementById('alternateFeedSide2').checked;
             const preview = document.getElementById('sheetPreview');
             const emptyMessage = document.getElementById('t-preview-empty');
             const limitMessage = document.getElementById('t-preview-limit');
@@ -441,6 +442,8 @@
             for (let index = 0; index < displayCount; index++) {
                 const sheetIndex = isInverted ? sheetCount - index - 1 : index;
                 const sheet = getSheetPages(sheetIndex);
+                const backSheetIndex = isInverted !== reverseSide2 ? sheetCount - index - 1 : index;
+                const backPages = getSheetPages(backSheetIndex).back;
                 const card = document.createElement('article');
                 card.className = 'sheet-card text-xs text-slate-700';
 
@@ -466,7 +469,7 @@
                 backLabel.textContent = t.previewBack;
                 const back = document.createElement('div');
                 back.className = 'sheet-side';
-                sheet.back.forEach(page => {
+                backPages.forEach(page => {
                     const pageCell = document.createElement('span');
                     pageCell.className = 'sheet-page';
                     pageCell.textContent = page;
@@ -680,7 +683,7 @@
         const alternateFeedSide2 = document.getElementById('alternateFeedSide2');
         alternateFeedSide2.addEventListener('change', () => {
             savePreference('sahifalovchi-reverse-side2', String(alternateFeedSide2.checked));
-            updatePageListLayout('side2');
+            updateFeedOrder();
         });
         const helpDialog = document.getElementById('helpDialog');
         document.getElementById('t-help-open').addEventListener('click', () => helpDialog.showModal());
