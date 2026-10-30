@@ -14,7 +14,8 @@
                 infoPages: "Betlar soni:",
                 labelSide1: "1-Tomon (old tomoni):",
                 labelSide2: "2-Tomon (orqa tomoni):",
-                layoutToggle: "Betlarni bir qatorda ko‘rsatish",
+                layoutToggle: "Har bir juftlikni yangi qatorda ko‘rsatish",
+                alternateFeedToggle: "Printer uchun teskari tartib",
                 resultPlaceholder: "Hisoblash tugmasini bosing — sahifalar roʻyxati shu yerda koʻrinadi.",
                 copyButton: "Nusxalash",
                 copyDone: "Nusxalandi ✓",
@@ -53,8 +54,9 @@
                         title: "Sahifalar ro‘yxatlari va nusxa olish",
                         items: [
                             "«1-Tomon» ro‘yxati varaqlarning old tomoniga, «2-Tomon» ro‘yxati esa orqa tomoniga mo‘ljallangan. Har bir vergul bilan ajratilgan juftlik bitta varaqning chap va o‘ng sahifalarini bildiradi.",
-                            "«Betlarni bir qatorda ko‘rsatish» belgilansa, juftliklar bir qatorda vergullar bilan davom etadi. Belgini olib tashlasangiz, har bir juftlik yangi qatordan boshlanadi; davom etayotgan qator vergul bilan tugaydi.",
+                            "Belgi o‘chirilganda sahifalar juftlari bitta qatorda ko‘rsatiladi. Belgilanganda har bir juftlik yangi qatordan boshlanadi.",
                             "«Nusxalash» tugmasi tegishli ro‘yxatni nusxalaydi. Ro‘yxat matnini sichqoncha bilan belgilab, faqat tanlangan qismini ham nusxalashingiz mumkin. Matn maydoniga bosish ham butun ro‘yxatni yoki tanlangan qismini nusxalaydi.",
+                            "«Printer uchun teskari tartib» belgisi faqat ikkinchi tomon ro‘yxatidagi varaqlar juftlarining tartibini o‘zgartiradi; har bir juftdagi betlar o‘z o‘rnida qoladi.",
                             "Natija maydonlari o‘qish uchun mo‘ljallangan. Ularni tahrirlab bo‘lmaydi; ro‘yxat sahifalar soni yoki tartib sozlamalari o‘zgarganda qayta tuziladi."
                         ]
                     },
@@ -106,7 +108,8 @@
                 infoPages: "Количество страниц:",
                 labelSide1: "Сторона 1 (лицевая):",
                 labelSide2: "Сторона 2 (оборотная):",
-                layoutToggle: "Показывать страницы в строку",
+                layoutToggle: "Каждую пару с новой строки",
+                alternateFeedToggle: "Обратный порядок для принтера",
                 resultPlaceholder: "Нажмите «Рассчитать», чтобы увидеть список страниц.",
                 copyButton: "Копировать",
                 copyDone: "Скопировано ✓",
@@ -145,8 +148,9 @@
                         title: "Списки страниц и копирование",
                         items: [
                             "Список «Сторона 1» предназначен для лицевой стороны листов, «Сторона 2» — для оборотной. Каждая пара чисел, разделённая запятой, обозначает левую и правую страницы на одной стороне листа.",
-                            "Если включено «Показывать страницы в строку», пары идут в одной строке и разделяются запятыми. Если снять галочку, каждая пара начинается с новой строки; запятая в конце строки показывает, что список продолжается.",
+                            "Если флажок снят, пары страниц показываются в одной строке. Если флажок установлен, каждая пара начинается с новой строки.",
                             "Кнопка «Копировать» копирует соответствующий список. Можно выделить мышью часть текста и скопировать только выделенное. Щелчок по полю также копирует весь список или выделенный фрагмент.",
+                            "Флажок «Обратный порядок для принтера» меняет порядок пар листов прямо в списке оборотной стороны; страницы внутри каждой пары остаются на своих местах.",
                             "Поля результата предназначены для просмотра. Изменять текст в них нельзя; списки перестраиваются при изменении числа страниц или настроек порядка."
                         ]
                     },
@@ -198,7 +202,8 @@
                 infoPages: "Page count:",
                 labelSide1: "Side 1 (Front):",
                 labelSide2: "Side 2 (Back):",
-                layoutToggle: "Show pages inline",
+                layoutToggle: "Show each pair on a new line",
+                alternateFeedToggle: "Reverse feed order for printer",
                 resultPlaceholder: "Press “Calculate” to see the page order.",
                 copyButton: "Copy",
                 copyDone: "Copied ✓",
@@ -237,8 +242,9 @@
                         title: "Page lists and copying",
                         items: [
                             "The “Side 1” list is for the front of the sheets; “Side 2” is for the back. Each comma-separated pair represents the left and right pages on one side of a sheet.",
-                            "When “Show pages inline” is checked, pairs continue on one line separated by commas. When unchecked, each pair starts on a new line; a trailing comma indicates that the list continues.",
+                            "When unchecked, page pairs are shown on one line. When checked, each pair starts on a new line.",
                             "The “Copy” button copies its corresponding list. You can select part of the text with the mouse to copy only that selection. Clicking inside a field also copies the whole list or the selected text.",
+                            "The “Reverse feed order for printer” checkbox reverses the sheet pairs directly in the back-side list while keeping the pages within each pair in place.",
                             "The result fields are read-only. Their contents are regenerated when the page count or ordering options change."
                         ]
                     },
@@ -330,6 +336,7 @@
             document.getElementById('t-layout-side2').textContent = t.layoutToggle;
             document.getElementById('side1').placeholder = t.resultPlaceholder;
             document.getElementById('side2').placeholder = t.resultPlaceholder;
+            document.getElementById('t-alternate-feed-side2').textContent = t.alternateFeedToggle;
             document.getElementById('t-copy-side1').textContent = t.copyButton;
             document.getElementById('t-copy-side2').textContent = t.copyButton;
             document.getElementById('t-btn-save').textContent = t.btnSave;
@@ -496,8 +503,9 @@
         }
 
         function formatPageList(side, fieldId) {
-            const separator = document.getElementById(`inline-${fieldId}`).checked ? ', ' : ',\n';
-            const isInverted = document.getElementById('invertFeed').checked;
+            const separator = document.getElementById(`inline-${fieldId}`).checked ? ',\n' : ', ';
+            const reverseSide2 = side === 'back' && document.getElementById('alternateFeedSide2').checked;
+            const isInverted = document.getElementById('invertFeed').checked !== reverseSide2;
             const pagePairs = new Array(sheetCount);
             for (let index = 0; index < sheetCount; index++) {
                 const sheetIndex = isInverted ? sheetCount - index - 1 : index;
@@ -669,6 +677,11 @@
         document.getElementById('invertFeed').addEventListener('change', updateFeedOrder);
         document.getElementById('inline-side1').addEventListener('change', () => updatePageListLayout('side1'));
         document.getElementById('inline-side2').addEventListener('change', () => updatePageListLayout('side2'));
+        const alternateFeedSide2 = document.getElementById('alternateFeedSide2');
+        alternateFeedSide2.addEventListener('change', () => {
+            savePreference('sahifalovchi-reverse-side2', String(alternateFeedSide2.checked));
+            updatePageListLayout('side2');
+        });
         const helpDialog = document.getElementById('helpDialog');
         document.getElementById('t-help-open').addEventListener('click', () => helpDialog.showModal());
         document.getElementById('t-help-close').addEventListener('click', () => helpDialog.close());
@@ -700,6 +713,7 @@
         }
         const savedLanguage = getSavedPreference('sahifalovchi-language', Object.keys(langData), 'uz');
         const savedTheme = getSavedPreference('sahifalovchi-theme', ['system', 'light', 'dark'], 'system');
+        alternateFeedSide2.checked = getSavedPreference('sahifalovchi-reverse-side2', ['true', 'false'], 'true') === 'true';
         document.getElementById('themeSelect').dataset.value = savedTheme;
         setLanguage(savedLanguage);
         applyTheme();
