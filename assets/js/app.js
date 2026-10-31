@@ -96,7 +96,7 @@
             },
             ru: {
                 title: "Брошюратор",
-                footerName: "Посмотрите на GitHub",
+                footerName: "Перейти на страницу в GitHub",
                 labelPages: "Всего страниц:",
                 increasePageCount: "Увеличить количество страниц",
                 decreasePageCount: "Уменьшить количество страниц",
