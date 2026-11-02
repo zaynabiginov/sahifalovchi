@@ -1,6 +1,6 @@
 # Sahifalovchi
 
-Language versions: [Русский](README.md) · [O‘zbekcha](README.uz.md)
+Language versions: [Русский](READMEru.md) · [O‘zbekcha](README.md)
 
 Sahifalovchi calculates page order for printing a book as a booklet on A4 sheets. It creates separate page lists for the front and back of each sheet and provides a visual layout preview.
 
