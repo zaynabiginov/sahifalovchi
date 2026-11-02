@@ -4,6 +4,7 @@
             uz: {
                 title: "Sahifalovchi",
                 footerName: "GitHub sahifasiga o'tish",
+                footerDescription: "Kitob sahifalarini buklet shaklida chop etishga tayyorlash",
                 labelPages: "Barcha sahifalar soni:",
                 increasePageCount: "Sahifalar sonini oshirish",
                 decreasePageCount: "Sahifalar sonini kamaytirish",
@@ -98,6 +99,7 @@
             ru: {
                 title: "Брошюратор",
                 footerName: "Перейти на страницу в GitHub",
+                footerDescription: "Подготовка страниц книги к печати в виде буклета",
                 labelPages: "Всего страниц:",
                 increasePageCount: "Увеличить количество страниц",
                 decreasePageCount: "Уменьшить количество страниц",
@@ -192,6 +194,7 @@
             en: {
                 title: "Booklet Maker",
                 footerName: "See on GitHub",
+                footerDescription: "Prepare book pages for booklet printing",
                 labelPages: "Total pages:",
                 increasePageCount: "Increase page count",
                 decreasePageCount: "Decrease page count",
@@ -324,6 +327,12 @@
 
             document.getElementById('t-title').textContent = t.title;
             document.getElementById('t-footer-name').textContent = t.footerName;
+            document.getElementById('t-footer-description').textContent = t.footerDescription;
+            const startYear = 2025;
+            const currentYear = new Date().getFullYear();
+            document.getElementById('t-footer-year').textContent = currentYear > startYear
+                ? `${startYear}–${currentYear}`
+                : String(startYear);
             document.getElementById('t-label-pages').textContent = t.labelPages;
             document.getElementById('increasePageCount').setAttribute('aria-label', t.increasePageCount);
             document.getElementById('decreasePageCount').setAttribute('aria-label', t.decreasePageCount);

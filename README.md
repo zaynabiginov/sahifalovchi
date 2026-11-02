@@ -1,6 +1,6 @@
 # Sahifalovchi
 
-Til versiyalari: [Русский](READMEru.md) · [English](READMEen.md)
+Til versiyalari: [Русский](README.md) · [English](README.en.md)
 
 Sahifalovchi — A4 varaqlarida buklet shaklida kitob chop etish uchun sahifalar tartibini hisoblaydigan dastur. U varaqlarning old va orqa tomonlari uchun alohida ro‘yxatlar tuzadi hamda sahifalar joylashuvini ko‘rgazmali tarzda ko‘rsatadi.
 
