@@ -33,6 +33,7 @@
                 previewLimit: "Tez ishlashi uchun {shown} ta varaq ko‘rsatilmoqda (jami {total} ta). Chop etish ro‘yxatida barcha varaqlar bor.",
                 languageLabel: "Til",
                 themeLabel: "Mavzu",
+                darkThemeLabel: "Qorong‘i mavzu",
                 themeSystem: "Tizim bo‘yicha",
                 themeLight: "Yorug‘",
                 themeDark: "Qorong‘i",
@@ -126,6 +127,7 @@
                 previewLimit: "Чтобы страница работала быстрее, показаны первые {shown} листов из {total}. В списках для печати есть все листы.",
                 languageLabel: "Язык",
                 themeLabel: "Тема",
+                darkThemeLabel: "Тёмная тема",
                 themeSystem: "Как в системе",
                 themeLight: "Светлая",
                 themeDark: "Тёмная",
@@ -219,6 +221,7 @@
                 previewLimit: "To keep the page responsive, showing the first {shown} of {total} sheets. The print lists still include every sheet.",
                 languageLabel: "Language",
                 themeLabel: "Theme",
+                darkThemeLabel: "Dark theme",
                 themeSystem: "System",
                 themeLight: "Light",
                 themeDark: "Dark",
@@ -283,6 +286,7 @@
         };
 
         let currentLang = 'uz';
+        let themePreference = 'system';
         let bookPageCount = 0;
         let sheetCount = 0;
         const copyResetTimers = {};
@@ -340,18 +344,9 @@
             document.getElementById('t-preview-title').textContent = t.previewTitle;
             document.getElementById('t-invert-label').textContent = t.invertLabel;
             document.getElementById('t-preview-empty').textContent = t.previewEmpty;
-            document.getElementById('t-theme-system').textContent = t.themeSystem;
-            document.getElementById('t-theme-light').textContent = t.themeLight;
-            document.getElementById('t-theme-dark').textContent = t.themeDark;
-            document.getElementById('themeSelectedLabel').textContent = {
-                system: t.themeSystem,
-                light: t.themeLight,
-                dark: t.themeDark
-            }[document.getElementById('themeSelect').dataset.value || 'system'];
             document.getElementById('languageSelect').setAttribute('aria-label', t.languageLabel);
             document.getElementById('languageMenu').querySelector('[role="menu"]').setAttribute('aria-label', t.languageLabel);
-            document.getElementById('themeSelect').setAttribute('aria-label', t.themeLabel);
-            document.getElementById('themeMenu').querySelector('[role="menu"]').setAttribute('aria-label', t.themeLabel);
+            document.getElementById('themeToggle').setAttribute('aria-label', t.darkThemeLabel);
             document.getElementById('t-download-label').setAttribute('aria-label', t.downloadLabel);
             document.getElementById('t-download-label').title = t.downloadLabel;
             document.getElementById('t-download-android').title = t.androidDownloadUnavailable;
@@ -396,21 +391,11 @@
         }
 
         function applyTheme() {
-            const themeSelect = document.getElementById('themeSelect');
-            const theme = themeSelect.dataset.value;
-            savePreference('sahifalovchi-theme', theme);
-            const t = langData[currentLang];
-            document.getElementById('themeSelectedLabel').textContent = {
-                system: t.themeSystem,
-                light: t.themeLight,
-                dark: t.themeDark
-            }[theme];
-            document.querySelectorAll('#themeMenu [data-theme]').forEach(option => {
-                option.setAttribute('aria-checked', String(option.dataset.theme === theme));
-            });
-            const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            savePreference('sahifalovchi-theme', themePreference);
+            const isDark = themePreference === 'dark' || (themePreference === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
             document.body.dataset.theme = isDark ? 'dark' : 'light';
             document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
+            document.getElementById('themeToggle').setAttribute('aria-checked', String(isDark));
         }
 
         function adjustPageCount(step) {
@@ -636,8 +621,7 @@
 
         const systemThemePreference = window.matchMedia('(prefers-color-scheme: dark)');
         const languageMenu = document.getElementById('languageMenu');
-        const themeMenu = document.getElementById('themeMenu');
-        const headerMenus = [languageMenu, themeMenu];
+        const headerMenus = [languageMenu];
         headerMenus.forEach(menu => {
             const summary = menu.querySelector('summary');
             menu.addEventListener('toggle', () => {
@@ -650,12 +634,9 @@
                 languageMenu.open = false;
             });
         });
-        themeMenu.querySelectorAll('[data-theme]').forEach(option => {
-            option.addEventListener('click', () => {
-                document.getElementById('themeSelect').dataset.value = option.dataset.theme;
-                applyTheme();
-                themeMenu.open = false;
-            });
+        document.getElementById('themeToggle').addEventListener('click', event => {
+            themePreference = event.currentTarget.getAttribute('aria-checked') === 'true' ? 'light' : 'dark';
+            applyTheme();
         });
         const downloadMenu = document.getElementById('downloadMenu');
         document.addEventListener('click', event => {
@@ -705,17 +686,17 @@
         document.getElementById('side2').addEventListener('click', () => copyPages('side2'));
         if (systemThemePreference.addEventListener) {
             systemThemePreference.addEventListener('change', () => {
-                if (document.getElementById('themeSelect').value === 'system') applyTheme();
+                if (themePreference === 'system') applyTheme();
             });
         } else {
             systemThemePreference.addListener(() => {
-                if (document.getElementById('themeSelect').value === 'system') applyTheme();
+                if (themePreference === 'system') applyTheme();
             });
         }
         const savedLanguage = getSavedPreference('sahifalovchi-language', Object.keys(langData), 'uz');
         const savedTheme = getSavedPreference('sahifalovchi-theme', ['system', 'light', 'dark'], 'system');
         alternateFeedSide2.checked = getSavedPreference('sahifalovchi-reverse-side2', ['true', 'false'], 'true') === 'true';
-        document.getElementById('themeSelect').dataset.value = savedTheme;
+        themePreference = savedTheme;
         setLanguage(savedLanguage);
         applyTheme();
         if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
